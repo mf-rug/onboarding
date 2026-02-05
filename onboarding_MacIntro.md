@@ -280,6 +280,32 @@ Now you can simply run `ssh habrok` to connect.
 
 You can find your Mac's hostname by running `hostname`, and then connect remotely with `ssh username@hostname`. This requires a [VPN connection to the university network](https://www.rug.nl/society-business/centre-for-information-technology/helpdesk/it-self-service/vpn/?lang=en) when off-campus.
 
+## AI-Assisted Coding
+
+AI tools have become genuinely useful for day-to-day programming. Here's a quick overview of what's available:
+
+### Chat-Based Assistants
+
+- **ChatGPT** / **Claude** — Great for coding questions, debugging, explaining error messages, and generating boilerplate code. Available as web apps and APIs.
+- Use these when you need to understand a concept, write a regex, translate between languages, or debug an error message.
+
+### Code Editors with AI
+
+- **GitHub Copilot** — Inline code completion that runs inside VS Code (and other editors). Suggests code as you type. Free for students via [GitHub Education](https://education.github.com/).
+- **Cursor** — A VS Code fork with deep AI integration (chat, inline edits, multi-file changes). Worth trying if you want AI woven into your editor workflow.
+
+### CLI Tools
+
+- **Claude Code** — A terminal-based AI coding assistant that can read your codebase, edit files, and run commands. Useful for larger refactoring tasks or exploring unfamiliar codebases.
+
+### Practical Tips
+
+- **AI excels at:** Boilerplate code, regular expressions, shell one-liners, explaining unfamiliar code, converting between file formats, writing tests.
+- **Be cautious with:** Domain-specific science code (e.g. force field parameters, statistical methods), numerical accuracy, and anything where a subtle bug could silently produce wrong results. Always verify AI-generated scientific code.
+- **General rule:** AI is a great assistant but not a replacement for understanding what the code does. Use it to speed up tasks you could do yourself, not to skip learning.
+
+> **Note:** This field moves fast. New tools and models appear regularly — check what's current when you read this.
+
 ## Closing
 
 That's it for now — this should be enough to get you started. Don't hesitate to ask questions, and do spend some time exploring these commands and settings. The more comfortable you get with these tools early on, the more time you'll save down the road.
