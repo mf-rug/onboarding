@@ -246,8 +246,6 @@ defaults write com.apple.ActivityMonitor SortDirection -int 0
 
 To enable trackpad scrolling in `nano` inside iTerm2, follow [these instructions on Stack Overflow](https://stackoverflow.com/questions/50026644/how-to-use-the-trackpad-to-scroll-in-nano-using-iterm2-the-way-it-works-in-term).
 
-**A note on finding answers:** [Stack Overflow](https://stackoverflow.com/) is an invaluable resource for programming questions — most problems you'll encounter have already been answered there. AI assistants like ChatGPT and Claude are also very useful for quick questions and generating ready-to-use commands.
-
 ## HPC Cluster Access (Habrok)
 
 The university's HPC cluster is called **Habrok** (the previous cluster "Peregrine" has been retired). Once you receive confirmation that your account is active, you can log in using `ssh`:
@@ -355,6 +353,63 @@ Track your project dependencies so others (and future-you) can recreate the envi
 
 - **pip:** `pip freeze > requirements.txt` → install with `pip install -r requirements.txt`
 - **conda:** `conda env export > environment.yml` → create with `conda env create -f environment.yml`
+
+## Code Editor
+
+For day-to-day coding, we recommend **Visual Studio Code** (VS Code). It's free, extensible, and widely used in both academia and industry:
+
+```bash
+brew install --cask visual-studio-code
+```
+
+### Useful VS Code Extensions
+
+- **Python** — Syntax highlighting, linting, debugging, Jupyter notebook support
+- **Remote - SSH** — Edit files on remote machines (e.g. Habrok) directly in VS Code
+- **GitLens** — Enhanced git integration (blame, history, comparisons)
+- **Jupyter** — Run notebooks inside VS Code
+
+You can install extensions from the Extensions panel (`Cmd + Shift + X`) or from the command line:
+
+```bash
+code --install-extension ms-python.python
+code --install-extension ms-vscode-remote.remote-ssh
+code --install-extension eamodio.gitlens
+```
+
+## Git and Version Control
+
+**Git** is essential for tracking changes to your code and collaborating with others. It's included in the Xcode Command Line Tools (installed with Homebrew), but you can also install the latest version directly:
+
+```bash
+brew install git
+```
+
+### Getting Started with Git
+
+If you're new to git, here are some good starting points:
+
+- [Git Handbook (GitHub)](https://guides.github.com/introduction/git-handbook/) — Short, practical introduction
+- [Pro Git Book](https://git-scm.com/book/en/v2) — Comprehensive free reference
+- [Oh My Git!](https://ohmygit.org/) — Interactive game to learn git concepts
+
+Basic workflow:
+
+```bash
+git init                    # initialise a new repository
+git add <file>              # stage changes
+git commit -m "message"     # commit staged changes
+git status                  # see what's changed
+git log --oneline           # view commit history
+```
+
+### GitHub
+
+[GitHub](https://github.com/) is the most popular platform for hosting git repositories. Sign up with your university email to get [GitHub Education](https://education.github.com/) benefits, which include free GitHub Pro access (private repos, Copilot, etc.).
+
+### Finding Answers
+
+[Stack Overflow](https://stackoverflow.com/) remains an invaluable resource for programming questions — most problems you'll encounter have already been answered there with vetted, peer-reviewed solutions. AI assistants (ChatGPT, Claude) are also excellent for quick questions and generating ready-to-use commands, but keep in mind that Stack Overflow answers have been reviewed by the community, which adds an extra layer of reliability.
 
 ## AI-Assisted Coding
 
