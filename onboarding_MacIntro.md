@@ -248,19 +248,37 @@ To enable trackpad scrolling in `nano` inside iTerm2, follow [these instructions
 
 **A note on finding answers:** [Stack Overflow](https://stackoverflow.com/) is an invaluable resource for programming questions — most problems you'll encounter have already been answered there. AI assistants like ChatGPT and Claude are also very useful for quick questions and generating ready-to-use commands.
 
-## HPC Cluster Access
+## HPC Cluster Access (Habrok)
 
-Once you receive confirmation that your Habrok account is active, you can log in using `ssh` on the command line:
+The university's HPC cluster is called **Habrok** (the previous cluster "Peregrine" has been retired). Once you receive confirmation that your account is active, you can log in using `ssh`:
 
 ```bash
-ssh pnumber@login2.hb.hpc.rug.nl
+ssh pnumber@login1.hb.hpc.rug.nl
 ```
 
-See the [Habrok documentation](https://wiki.hpc.rug.nl/habrok/start) for full details.
+> **Note:** Replace `pnumber` with your actual p-number (e.g. `p123456`). You may need to be on the [university VPN](https://www.rug.nl/society-business/centre-for-information-technology/helpdesk/it-self-service/vpn/?lang=en) if connecting from off-campus.
+
+See the [Habrok documentation](https://wiki.hpc.rug.nl/habrok/start) for full details, including how to submit jobs with the SLURM workload manager.
+
+### SSH Basics
 
 `ssh` connects you to a remote UNIX computer — once connected, everything you type runs on that remote system. Other useful tools for working with remote machines are `scp` and `rsync` (for transferring files).
 
-You can also find out your own Mac's hostname by running `hostname`, and then connect to your Mac remotely with `ssh username@hostname` (replacing both with your actual values). Note that this requires a [VPN connection to the university network](https://www.rug.nl/society-business/centre-for-information-technology/helpdesk/it-self-service/vpn/?lang=en) when off-campus.
+### SSH Config for Convenience
+
+To avoid typing the full hostname every time, add an entry to `~/.ssh/config`:
+
+```
+Host habrok
+    HostName login1.hb.hpc.rug.nl
+    User pnumber
+```
+
+Now you can simply run `ssh habrok` to connect.
+
+### Connecting to Your Own Mac Remotely
+
+You can find your Mac's hostname by running `hostname`, and then connect remotely with `ssh username@hostname`. This requires a [VPN connection to the university network](https://www.rug.nl/society-business/centre-for-information-technology/helpdesk/it-self-service/vpn/?lang=en) when off-campus.
 
 ## Closing
 
