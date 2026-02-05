@@ -153,11 +153,28 @@ defaults write com.apple.Terminal CopyAttributesProfile com.apple.Terminal.no-at
 ### Installing Programs with Homebrew
 
 ```bash
-# install important programs
-brew install coreutils moreutils findutils htop ag tree exa cowsay bat bottom vim tldr jid jq go libpq hyperfine highlight nvim youtube-dl autojump httpie pyenv ripgrep git tmux kap
+# essential command-line tools
+brew install coreutils moreutils findutils git tmux vim nvim
 
-# you can also use brew to install common programs with graphical interface, e.g:
-brew install --cask docker zoom vlc cleanmymac
+# search and navigation
+brew install ripgrep fd fzf zoxide eza bat tree ag
+
+# system monitoring and utilities
+brew install htop bottom hyperfine tldr jq httpie highlight cowsay
+
+# programming tools
+brew install go pyenv
+
+# media
+brew install yt-dlp
+```
+
+> **Note:** `exa` has been replaced by `eza` (actively maintained fork). `youtube-dl` has been replaced by `yt-dlp` (much faster, actively maintained). `autojump` is superseded by `zoxide` (faster, works with both bash and zsh).
+
+Some useful GUI applications can be installed with `brew install --cask`:
+
+```bash
+brew install --cask iterm2 docker zoom vlc rectangle
 ```
 
 ### Screenshot Settings
