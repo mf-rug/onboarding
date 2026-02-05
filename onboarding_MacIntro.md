@@ -36,7 +36,27 @@ Most command-line programs install into standard locations automatically, but so
 
 ## Shell Configuration
 
-To add something to your `PATH`, use the `export` command. To avoid repeating this every time you open a terminal, place the command in a shell startup file that runs automatically — such as `~/.bashrc` and `~/.bash_profile`.
+### Bash vs. Zsh
+
+Since macOS Catalina (2019), the default shell is **zsh**. The older default was **bash**. Both are excellent and share most concepts (PATH, aliases, environment variables, scripting basics). The main differences are in startup files and some syntax details. Pick whichever you prefer:
+
+| | **Bash** | **Zsh** |
+|---|---|---|
+| Install latest | `brew install bash` | Built-in (or `brew install zsh`) |
+| Set as default | `chsh -s /opt/homebrew/bin/bash` | `chsh -s /bin/zsh` (already default) |
+| Config files | `~/.bash_profile`, `~/.bashrc` | `~/.zprofile`, `~/.zshrc` |
+| Silence deprecation warning | `export BASH_SILENCE_DEPRECATION_WARNING=1` | N/A (zsh is already the default) |
+
+> **Recommendation:** If you're new to the command line, sticking with **zsh** (the default) is the simplest option. If you prefer bash or need it for compatibility, install a modern version via Homebrew — the one bundled with macOS is very outdated (v3.2, from 2007) due to licensing.
+
+### Editing Config Files
+
+To add something to your `PATH`, use the `export` command. To avoid repeating this every time you open a terminal, place the command in your shell's startup file:
+
+- **Zsh:** `~/.zshrc` (loaded for every interactive shell)
+- **Bash:** `~/.bashrc` (you may need to source it from `~/.bash_profile` — see below)
+
+A few notes on these files:
 
 - `~` is a shortcut for your home folder, e.g. `/Users/max/`
 - The `.` prefix makes the file hidden — but it's still just a plain text file you can edit
@@ -46,7 +66,7 @@ To edit text files from the terminal, you have two options:
 1. **Graphical editor:** Run `open -e <file>` to open it in TextEdit — easiest for beginners.
 2. **Terminal editor:** Unless you're already familiar with `vim`, start with `nano` (run `nano <file>`). It works like a regular editor with arrow-key navigation. Keyboard shortcuts are listed at the bottom of the screen — `^` means the Ctrl key, so `^X` means `Ctrl + X` to exit.
 
-Most people auto-load the file `.bashrc` by adding these three lines to the `.bash_profile`:
+**If using bash**, most people auto-load `.bashrc` by adding these lines to `~/.bash_profile`:
 
 ```bash
 if [ -f $HOME/.bashrc ]; then
@@ -54,58 +74,72 @@ if [ -f $HOME/.bashrc ]; then
 fi
 ```
 
-Any additional startup commands go in `.bashrc`. For example, to add Homebrew to your `PATH`, add the line it suggested:
+**If using zsh**, you can put everything directly in `~/.zshrc` — no extra wiring needed.
+
+Add the Homebrew PATH to your config file (e.g. `~/.zshrc` or `~/.bashrc`):
 
 ```bash
 export PATH=/opt/homebrew/bin:$PATH
 ```
 
-Save the file (`Ctrl + X`, confirm with `y`) and reload it with `source ~/.bashrc` so the changes take effect in your current session. Verify that Homebrew works by running `brew --version`. If it prints a version number, you're all set. A good first package to install is an up-to-date version of bash (the one bundled with macOS is outdated):
+Save the file (`Ctrl + X`, confirm with `y`) and reload it so the changes take effect in your current session:
 
 ```bash
-brew install bash
+source ~/.zshrc    # or: source ~/.bashrc
 ```
 
-To make bash your default shell (instead of zsh), run:
-
-```bash
-chsh -s /bin/bash
-```
+Verify that Homebrew works by running `brew --version`. If it prints a version number, you're all set.
 
 ### Customising Your Prompt
 
-There are many other useful things you can add to your `.bashrc`. You'll discover them over time as you search for solutions to minor annoyances — nearly everything is customisable. For instance, the prompt (the text before each command line) can show your username, current directory, and even colours.
+The prompt (the text before each command line) can show your username, current directory, colours, and more.
 
-> **Example prompt:** The prompt shows time, username, and the current directory in green.
-
-You can achieve that by having this line in `.bashrc`:
+**Bash** uses the `PS1` variable:
 
 ```bash
+# In ~/.bashrc — shows time, username, and current directory in green
 export PS1='\t [\u@home] \[\e[0;32m\]/\W/\[\e[m\] $ '
 ```
 
-Search for "customize bash prompt" to learn more about the available escape codes.
+**Zsh** uses the `PROMPT` variable with its own escape codes:
+
+```zsh
+# In ~/.zshrc — shows username, current directory in green, and a % prompt
+PROMPT='%n@%m %F{green}%1~%f %# '
+```
+
+Search for "customize bash prompt" or "customize zsh prompt" to learn more about the available escape codes.
 
 ### Tab Completion
 
-Tab completion is one of the most useful tricks for efficient terminal navigation: pressing `Tab` auto-completes file, folder, and program names. For example, type `na` and press `Tab` to complete it to `nano` — unless another program also starts with "na", in which case the shell will either complete up to the common prefix, show all matches (sometimes requiring a second `Tab` press), or cycle through them.
+Tab completion is one of the most useful tricks for efficient terminal navigation: pressing `Tab` auto-completes file, folder, and program names. For example, type `na` and press `Tab` to complete it to `nano` — unless another program also starts with "na", in which case the shell will either complete up to the common prefix, show all matches, or cycle through them.
 
-I prefer the cycling behaviour, which you can configure like this:
+**Bash** tab completion config (add to `~/.bashrc`):
 
 ```bash
-# show ambiguous file names upon tab completion, don't complete
-#[[ $- = *i* ]] && bind 'set show-all-if-ambiguous on'
-
-# cycle through files upon ambiguous tab completion
+# cycle through matches on ambiguous tab completion
 [[ $- = *i* ]] && bind TAB:menu-complete
 
 # tab completion: ignore case
 [[ $- = *i* ]] && bind 'set completion-ignore-case on'
 ```
 
+**Zsh** tab completion config (add to `~/.zshrc`):
+
+```zsh
+# enable completion system
+autoload -Uz compinit && compinit
+
+# case-insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+# cycle through matches with Tab
+zstyle ':completion:*' menu select
+```
+
 Lines starting with `#` are comments and have no effect.
 
-The rest of my `.bashrc` contains custom variables and aliases — you'll build up your own collection over time. There are many good "dotfiles" repositories online with useful suggestions for aliases, exports, and functions.
+The rest of my config contains custom variables and aliases — you'll build up your own collection over time. There are many good "dotfiles" repositories online with useful suggestions for aliases, exports, and functions.
 
 ## macOS Defaults & Tweaks
 
@@ -114,9 +148,6 @@ Below are some `defaults` commands and other tweaks I typically run on a fresh M
 ```bash
 # copy / paste from the command line without text formatting
 defaults write com.apple.Terminal CopyAttributesProfile com.apple.Terminal.no-attributes
-
-# silence an annoying warning on macOS to use zsh
-export BASH_SILENCE_DEPRECATION_WARNING=1
 ```
 
 ### Installing Programs with Homebrew
