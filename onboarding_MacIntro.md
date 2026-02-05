@@ -280,6 +280,82 @@ Now you can simply run `ssh habrok` to connect.
 
 You can find your Mac's hostname by running `hostname`, and then connect remotely with `ssh username@hostname`. This requires a [VPN connection to the university network](https://www.rug.nl/society-business/centre-for-information-technology/helpdesk/it-self-service/vpn/?lang=en) when off-campus.
 
+## Python Setup
+
+Python is essential for computational biology. Here's how to set up a clean, manageable Python environment.
+
+### Managing Python Versions with pyenv
+
+[pyenv](https://github.com/pyenv/pyenv) lets you install and switch between multiple Python versions (it's already in the brew install list above):
+
+```bash
+brew install pyenv
+
+# install a specific Python version
+pyenv install 3.12
+
+# set it as your default
+pyenv global 3.12
+```
+
+Add the following to your shell config (`~/.zshrc` or `~/.bashrc`) so pyenv works automatically:
+
+```bash
+eval "$(pyenv init -)"
+```
+
+### Virtual Environments
+
+Always use a **virtual environment** for each project to keep dependencies isolated:
+
+```bash
+# create a virtual environment in the current project folder
+python -m venv .venv
+
+# activate it
+source .venv/bin/activate
+
+# install packages (they stay inside .venv/)
+pip install numpy pandas matplotlib
+
+# deactivate when done
+deactivate
+```
+
+### Conda as an Alternative
+
+If you prefer conda (common in scientific computing), install [Miniforge](https://github.com/conda-forge/miniforge) rather than the full Anaconda — it's lighter and uses the community-driven conda-forge channel by default:
+
+```bash
+brew install miniforge
+conda init "$(basename "$SHELL")"
+```
+
+### Key Packages for Computational Biology
+
+```bash
+pip install numpy scipy pandas matplotlib seaborn biopython MDAnalysis jupyter
+```
+
+Or with conda:
+
+```bash
+conda install numpy scipy pandas matplotlib seaborn biopython mdanalysis jupyter
+```
+
+### pip vs. conda
+
+- **pip** installs from PyPI and works with virtual environments. Best for pure-Python packages and most general use.
+- **conda** manages both Python packages and non-Python dependencies (C libraries, etc.). Useful when packages have complex compiled dependencies.
+- **General advice:** Pick one approach per project and stick with it. Mixing pip and conda in the same environment can cause conflicts.
+
+### Reproducibility
+
+Track your project dependencies so others (and future-you) can recreate the environment:
+
+- **pip:** `pip freeze > requirements.txt` → install with `pip install -r requirements.txt`
+- **conda:** `conda env export > environment.yml` → create with `conda env create -f environment.yml`
+
 ## AI-Assisted Coding
 
 AI tools have become genuinely useful for day-to-day programming. Here's a quick overview of what's available:
