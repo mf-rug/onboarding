@@ -2,47 +2,49 @@
 
 ## Administrative
 
-- Probably the best thing to start with is figuring out access to your email and myuniversity, you'll need that to do some of the tasks. The login is with p number and password plus two factor authentication, so you need to install the Google Authenticator app ([MFA setup instructions](https://www.rug.nl/society-business/centre-for-information-technology/security/multi-factor-authentication?lang=en)) on your phone.
-- Sandra Haan (our secretary, secbc@rug.nl) can be contacted for administrative onboarding and obtaining a university card. Also mail her to make sure you get added to the biotechnology email list. She will probably also give some forms to fill if they didn't yet, and she or Hugo can provide you with an office key.
-- Get access to the peregrine high-performance cluster, by requesting here: [Habrok account request](https://rug.topdesk.net/tas/public/ssp/content/serviceflow?unid=84efb629e7484b728dbbf8dfef78fdad). In case that link doesn't work, log in to the [CIT help portal (IRIS)](https://iris.service.rug.nl/) and search for habrok, request account. In the form, just mention that you're a computational PhD doing MD simulations etc.
-- Some software can be downloaded from the [university software portal](https://iris.service.rug.nl/tas/public/ssp/content/detail/service?unid=eaf8ada50c7846b792798f1addb69f8e&from=d74117e5-047a-4378-bb03-3510cf8871d1) but other software like Office and Adobe, you just download from their website directly after logging in simply using your @rug.nl email address. (This sometimes changes, again check IRIS for help if that doesn't work.)
+- Start by getting access to your email and My University — you'll need both for many of the following tasks. You log in with your p-number, password, and two-factor authentication, so install the Google Authenticator app ([MFA setup instructions](https://www.rug.nl/society-business/centre-for-information-technology/security/multi-factor-authentication?lang=en)) on your phone first.
+- Contact Sandra Haan (our secretary, secbc@rug.nl) for administrative onboarding and to obtain your university card. Ask her to add you to the biotechnology email list as well. She will also have some forms for you to fill in, and she or Hugo can provide you with an office key.
+- Request access to the Habrok high-performance cluster here: [Habrok account request](https://rug.topdesk.net/tas/public/ssp/content/serviceflow?unid=84efb629e7484b728dbbf8dfef78fdad). If that link doesn't work, log in to the [CIT help portal (IRIS)](https://iris.service.rug.nl/) and search for "Habrok". In the form, mention that you're a computational PhD doing MD simulations.
+- Some software can be downloaded from the [university software portal](https://iris.service.rug.nl/tas/public/ssp/content/detail/service?unid=eaf8ada50c7846b792798f1addb69f8e&from=d74117e5-047a-4378-bb03-3510cf8871d1). Other software like Office and Adobe can be downloaded directly from their websites after logging in with your @rug.nl email address. (This process changes occasionally — check IRIS for help if it doesn't work.)
 
 ## macOS Basics
 
-Some instructions for making your Mac a productive environment. You may already know some of these things, sorry if they should be a bit basic.
+Below are some instructions for making your Mac a productive environment. You may already know some of these — apologies if parts are a bit basic.
 
-- First familiarise yourself with macOS. You have the Dock in the bottom part with currently open and common programs. Probably you want to clean up there a bit and remove programs you're unlikely to use. Other programs you use often can be added to stay there permanently, for both actions just right-click on the icon. As in Windows, you can switch between open windows using `Cmd + Tab`, but you can also click `F3` to see all open windows. You can use "Spotlight" to search for any program or document, just click `Cmd + Space`. "Finder" corresponds to the Windows Explorer and works similarly. Check out the different views, e.g. list vs columns.
-- Have a look at the System Settings (Apple symbol in the top left). The menu bar at the top of the screen is always the one for the currently active program (i.e. the program in the foreground).
-- To install programs, download the installer for Mac, which comes either as an image file `.dmg` or a real installer. The latter works like on Windows (double click and it does the rest), the former works by opening the `.dmg` and it will show the content and sometimes a link to your Applications folder. All you need to do is drag the symbol of the program into the Applications folder. If the app folder isn't shown in the `.dmg`, just drag it into the Applications folder within Finder. Some programs can also be installed directly from the App Store.
+- **The Dock** sits at the bottom of the screen and shows running and pinned applications. Clean it up by removing apps you don't use (right-click the icon) and pin the ones you use often.
+- **Switching windows:** Use `Cmd + Tab` to switch between apps, or press `F3` (Mission Control) to see all open windows at once.
+- **Spotlight:** Press `Cmd + Space` to quickly search for any program, document, or setting.
+- **Finder** is the macOS equivalent of Windows Explorer. Try the different view modes (list, columns, etc.).
+- **System Settings** are found under the Apple menu in the top-left corner. The menu bar at the top of the screen always belongs to the currently active (foreground) application.
+- **Installing apps:** Mac installers come in two forms. A `.dmg` disk image: open it, then drag the app icon into your Applications folder. A `.pkg` installer: double-click and follow the steps. Some apps are also available directly from the App Store.
 
 ## Terminal Setup
 
-macOS is based on UNIX, and so shares the same core structure with Linux. Thus, you have access to a full-scale UNIX command line such as bash. You will be using a lot of command line in computational biology, so the terminal is one of the most important pieces of software you're going to use. Thus, it's worth to spend some time to get the most out of it. In the following, some hints on how to optimise the command line.
+macOS is based on UNIX and shares the same core structure as Linux. This means you have access to a full UNIX command line. You'll use the terminal a lot in computational biology, so it's worth spending some time making it comfortable.
 
-First of all, it's probably a good idea to install [iTerm2](https://iterm2.com/), a newer and modern version of the terminal program. Check out the settings and choose e.g. a style that you like.
+A good first step is to install [iTerm2](https://iterm2.com/), a modern replacement for the built-in Terminal app. Have a look at its settings and pick a colour scheme you like.
 
 ## Homebrew
 
-Next, you want to install [Homebrew](https://brew.sh/), which is a package manager that allows you to install nearly all other programs for Mac very easily. It will also install Xcode Command Line Tools for you, which unlocks a bunch of developer tools.
+Next, install [Homebrew](https://brew.sh/) — the package manager for macOS. It lets you install almost any command-line tool or desktop application with a single command. It will also install the Xcode Command Line Tools, which provide essential developer utilities.
 
-After brew is installed, it may show some messages saying that you have to add the location of the installed program to your PATH. This is a very common procedure you have to get used to on UNIX. The `PATH` environment variable (which you can look at by typing `echo $PATH` in the command line) informs the OS about all the locations where it should look for software.
+After installation, Homebrew may tell you to add its directory to your `PATH`. This is a standard UNIX concept: the `PATH` environment variable (view it with `echo $PATH`) tells the OS where to look for programs.
 
-> **Note:** Terminal commands are commonly shown in `monospace` or indicated using `backticks`. For bash, you often see a dollar sign to indicate a terminal prompt, e.g. `$ echo`.
+> **Note:** In documentation, terminal commands are typically shown in `monospace` or `backticks`. A leading `$` indicates a shell prompt, e.g. `$ echo "hello"`.
 
-Many command line programs will be installed as subfolders within the default locations, but others install in a separate folder and that folder then needs to be added to the PATH.
+Most command-line programs install into standard locations automatically, but some end up in a separate directory that you need to add to your `PATH` manually.
 
 ## Shell Configuration
 
-To add something to your PATH, you can use the `export` command. To avoid having to do this every time you open a terminal, you can add the export command in a special file that is always executed when you open a new terminal — the files `~/.bashrc` and `~/.bash_profile`.
+To add something to your `PATH`, use the `export` command. To avoid repeating this every time you open a terminal, place the command in a shell startup file that runs automatically — such as `~/.bashrc` and `~/.bash_profile`.
 
 - `~` is a shortcut for your home folder, e.g. `/Users/max/`
-- The `.` before the file/folder name makes it a hidden system file
-- Nevertheless, they are just simple text files that you can edit
+- The `.` prefix makes the file hidden — but it's still just a plain text file you can edit
 
-To edit text files, you have two options:
+To edit text files from the terminal, you have two options:
 
-1. Use a simple graphical text editor (which you can fire up from the command line using `open -e <file>` — this is mostly the way for noobies)
-2. Use a command line editor of varying sophistication. Unless you're already familiar with the "pro" editors like `vim`, you can start with `nano` (open with `nano <file>`). It looks like a regular editor and you can use the arrow keys to navigate the pointer, but it also has several keyboard shortcuts explained at the bottom. `^` indicates the Ctrl key, so to close the program e.g., you would press `Ctrl + X`.
+1. **Graphical editor:** Run `open -e <file>` to open it in TextEdit — easiest for beginners.
+2. **Terminal editor:** Unless you're already familiar with `vim`, start with `nano` (run `nano <file>`). It works like a regular editor with arrow-key navigation. Keyboard shortcuts are listed at the bottom of the screen — `^` means the Ctrl key, so `^X` means `Ctrl + X` to exit.
 
 Most people auto-load the file `.bashrc` by adding these three lines to the `.bash_profile`:
 
@@ -52,19 +54,19 @@ if [ -f $HOME/.bashrc ]; then
 fi
 ```
 
-The rest of startup instructions you can now write in `.bashrc`, and for brew, open `.bashrc` and write on a separate line whatever brew suggested, e.g.:
+Any additional startup commands go in `.bashrc`. For example, to add Homebrew to your `PATH`, add the line it suggested:
 
 ```bash
 export PATH=/opt/homebrew/bin:$PATH
 ```
 
-Save the file (`Ctrl + X`, confirm with `y`), and source it via `source ~/.bashrc` (to make the effects come into effect in the current window). Now try and see if brew works, by typing `brew --version`, which should not yield an error if you set up the PATH correctly. If it works, install your first program, which is bash itself (it is an outdated version on new Macs):
+Save the file (`Ctrl + X`, confirm with `y`) and reload it with `source ~/.bashrc` so the changes take effect in your current session. Verify that Homebrew works by running `brew --version`. If it prints a version number, you're all set. A good first package to install is an up-to-date version of bash (the one bundled with macOS is outdated):
 
 ```bash
 brew install bash
 ```
 
-Make bash your default shell (unless you really want to use zsh instead, that is) with this command:
+To make bash your default shell (instead of zsh), run:
 
 ```bash
 chsh -s /bin/bash
@@ -72,7 +74,7 @@ chsh -s /bin/bash
 
 ### Customising Your Prompt
 
-Regarding the `.bashrc`, there are many other useful things you would want to write in this file as well. Generally you'd find out about them by googling a certain issue or something that annoys you. Nearly everything can also be customised. For instance, the prompt (the text that precedes every line in the command line) can be changed to always show the user name and the current folder. You can also add colors there.
+There are many other useful things you can add to your `.bashrc`. You'll discover them over time as you search for solutions to minor annoyances — nearly everything is customisable. For instance, the prompt (the text before each command line) can show your username, current directory, and even colours.
 
 > **Example prompt:** The prompt shows time, username, and the current directory in green.
 
@@ -82,15 +84,13 @@ You can achieve that by having this line in `.bashrc`:
 export PS1='\t [\u@home] \[\e[0;32m\]/\W/\[\e[m\] $ '
 ```
 
-If you google / ChatGPT something like "unix default prompt", you'll find more info on that.
+Search for "customize bash prompt" to learn more about the available escape codes.
 
 ### Tab Completion
 
-You can also modify the way the tab completion works. Tab completion is the most useful trick for efficient navigation in the command line: pressing the `Tab` key auto-completes file, folder, and program names.
+Tab completion is one of the most useful tricks for efficient terminal navigation: pressing `Tab` auto-completes file, folder, and program names. For example, type `na` and press `Tab` to complete it to `nano` — unless another program also starts with "na", in which case the shell will either complete up to the common prefix, show all matches (sometimes requiring a second `Tab` press), or cycle through them.
 
-For instance, if you want to use `nano`, you could just type `na` and press `Tab`, it will autocomplete to `nano`, unless you have another program installed that starts with "na". Should that be the case, the terminal behaves in one of several ways: it will either complete the letters up to the point where the names differ, or it will show the ambiguous programs (sometimes for that to happen you have to press `Tab` twice), or it will autocomplete to the first one, and if you hit `Tab` again, it will go to the second, etc.
-
-I like the cycling option and configure that so:
+I prefer the cycling behaviour, which you can configure like this:
 
 ```bash
 # show ambiguous file names upon tab completion, don't complete
@@ -103,13 +103,13 @@ I like the cycling option and configure that so:
 [[ $- = *i* ]] && bind 'set completion-ignore-case on'
 ```
 
-Note that all lines starting with `#` are comments and have no effect.
+Lines starting with `#` are comments and have no effect.
 
-The rest of my bashrc has some custom variables and shortcuts, you will probably come up with your own in due time. There are a lot of useful other suggestions for customisation here, just click through the alias, export, and function files and copy paste as you see fit. There are also a lot of useful things in the setup file, here, rather than adding those lines to the bashrc, you'd execute them just once on the terminal directly.
+The rest of my `.bashrc` contains custom variables and aliases — you'll build up your own collection over time. There are many good "dotfiles" repositories online with useful suggestions for aliases, exports, and functions.
 
 ## macOS Defaults & Tweaks
 
-Some commands I usually run on a new Mac (googling / ChatGPT-ing the command should yield more info):
+Below are some `defaults` commands and other tweaks I typically run on a fresh Mac. You can look up any of them for more details.
 
 ```bash
 # copy / paste from the command line without text formatting
@@ -196,18 +196,24 @@ defaults write com.apple.ActivityMonitor SortDirection -int 0
 
 ### iTerm2 Scrolling
 
-Change an iTerm setting to allow scrolling in `nano` by changing the setting as described here: [Enable trackpad scrolling in nano (Stack Overflow)](https://stackoverflow.com/questions/50026644/how-to-use-the-trackpad-to-scroll-in-nano-using-iterm2-the-way-it-works-in-term).
+To enable trackpad scrolling in `nano` inside iTerm2, follow [these instructions on Stack Overflow](https://stackoverflow.com/questions/50026644/how-to-use-the-trackpad-to-scroll-in-nano-using-iterm2-the-way-it-works-in-term).
 
-By the way, do you already know about stackoverflow? It's your BEST FRIEND to answer any question about absolutely anything related to IT/programming. Just google your problem, and in 95% of cases you'll find the answer on stackoverflow. As mentioned, chatgpt is a useful alternative, I use it now quite a lot for questions or copy paste-ready complex command lines.
+**A note on finding answers:** [Stack Overflow](https://stackoverflow.com/) is an invaluable resource for programming questions — most problems you'll encounter have already been answered there. AI assistants like ChatGPT and Claude are also very useful for quick questions and generating ready-to-use commands.
 
 ## HPC Cluster Access
 
-Lastly, as soon as you have access to the habrok cluster confirmed by email, you can log in with `pnumber@login2.hb.hpc.rug.nl` and your normal password using `ssh` on the command line. Check the [Habrok documentation](https://wiki.hpc.rug.nl/habrok/start) here.
+Once you receive confirmation that your Habrok account is active, you can log in using `ssh` on the command line:
 
-`ssh` is a program that allows you to connect to a different UNIX computer. As soon as you SSH somewhere, it's as if you were now sitting on a keyboard on that other computer (or server), everything you type now happens on that remote system. Your other friends to interact with remote systems are `scp` and `rsync` (to transfer files).
+```bash
+ssh pnumber@login2.hb.hpc.rug.nl
+```
 
-You'll probably need to find out your own hostname — type `hostname` and you'll see it. Now you can connect from any UNIX terminal in the world to your own Mac with SSH: just type `ssh username@hostname`, replacing `username` with your username (e.g. `max` in my case, check the folder name in `~`), and replacing `hostname` with the output of the `hostname` command. Because of university security settings, this only works if you use a VPN to connect to the university network. Check out [how to set up VPN](https://www.rug.nl/society-business/centre-for-information-technology/helpdesk/it-self-service/vpn/?lang=en).
+See the [Habrok documentation](https://wiki.hpc.rug.nl/habrok/start) for full details.
+
+`ssh` connects you to a remote UNIX computer — once connected, everything you type runs on that remote system. Other useful tools for working with remote machines are `scp` and `rsync` (for transferring files).
+
+You can also find out your own Mac's hostname by running `hostname`, and then connect to your Mac remotely with `ssh username@hostname` (replacing both with your actual values). Note that this requires a [VPN connection to the university network](https://www.rug.nl/society-business/centre-for-information-technology/helpdesk/it-self-service/vpn/?lang=en) when off-campus.
 
 ## Closing
 
-Ok that's it for the moment, should get you going. Don't hesitate to ask or spend some time looking up details about some of these commands and settings. You'll spend a lot of time with these tools, and the more you become familiar with them at the beginning, the more time it will save you later.
+That's it for now — this should be enough to get you started. Don't hesitate to ask questions, and do spend some time exploring these commands and settings. The more comfortable you get with these tools early on, the more time you'll save down the road.
