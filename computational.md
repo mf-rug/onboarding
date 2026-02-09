@@ -297,6 +297,284 @@ Now you can simply run `ssh habrok` to connect. This also works with `scp` and `
 
 You can find your Mac's hostname by running `hostname`, and then connect remotely with `ssh username@hostname`. This requires a VPN connection to the university network when off-campus.
 
+## File Sharing & Backups
+
+### Cloud Storage
+
+Avoid using Dropbox, OneDrive, or other third-party cloud services for university data — there are privacy and data governance concerns with storing research data on non-EU servers. That said, they're tolerated for non-critical files (papers, presentations, etc.).
+
+**Google Drive** via your university account (`@rug.nl`) is hosted by the university and offers unlimited storage. It's the recommended option for sharing files with colleagues:
+
+```bash
+brew install --cask google-drive
+```
+
+### Syncthing (Peer-to-Peer Sync)
+
+[Syncthing](https://syncthing.net/) synchronises folders directly between your devices — no cloud server involved. It's useful for keeping files in sync between e.g. your laptop and a workstation.
+
+```bash
+brew install syncthing
+
+# start syncthing (opens web UI in browser)
+syncthing
+```
+
+The web interface is accessible at [http://localhost:8384](http://localhost:8384), where you can add devices and configure shared folders.
+
+**Auto-start on boot:** Create the file `~/Library/LaunchAgents/com.syncthing.syncthing.plist` with the following content:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.syncthing.syncthing</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/syncthing</string>
+        <string>-no-browser</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+</dict>
+</plist>
+```
+
+To test it, stop any running Syncthing instance and load the agent manually:
+
+```bash
+pkill -f syncthing
+launchctl load ~/Library/LaunchAgents/com.syncthing.syncthing.plist
+```
+
+Then visit [http://localhost:8384](http://localhost:8384) to confirm it's running. After a reboot, Syncthing will start automatically.
+
+### RDMS (University Backup Storage)
+
+All RUG employees have access to **unlimited backup space** on RDMS (Research Data Management Service). See the [RDMS documentation](https://wiki.hpc.rug.nl/rdms/start) for full details.
+
+**Connecting via Finder:** Use `Cmd + K` (Go → Connect to Server) and enter `https://webdav.data.rug.nl`. This gives a convenient overview of your files, but is very slow — don't attempt to copy large amounts of data or calculate folder sizes through Finder.
+
+![Finder Connect to Server dialog showing RDMS WebDAV connection](rdms.png)
+
+**Connecting via command line:** The RDMS wiki recommends iCommands, but those can be tricky to get working on macOS. A reliable alternative is [Cyberduck](https://cyberduck.io/), specifically its command-line interface `duck`:
+
+```bash
+brew install duck
+```
+
+To sync a local folder to RDMS:
+
+```bash
+duck --sync davs://webdav.data.rug.nl/you@rug.nl/target/folder/ /local/folder/ \
+    --existing upload -u you@rug.nl -y | tee -a ~/.backup.log
+```
+
+This will compare local and remote files, upload anything new or changed, and log progress to `~/.backup.log` (while also printing to the screen — that's what `tee` does). On first run, `duck` will ask for your password and can save it to the macOS keychain.
+
+You should back up regularly (at least weekly), but it's even better to **automate it**.
+
+**Automated backups with launchd:** The following setup runs a backup script automatically. The script splits large directories into manageable chunks, skips folders that haven't been modified recently, handles missing remote directories, and verifies that recent files made it to the server.
+
+Save this as `~/.backup_script.sh`:
+
+```bash
+#!/bin/bash
+
+################################
+############# Info #############
+################################
+
+# Automated backup script using duck (Cyberduck CLI).
+# Syncs a local directory to RDMS via WebDAV.
+# Designed to be run via launchd (see plist below).
+
+################################
+##### Define your settings #####
+################################
+
+# Local base folder to sync
+local_dir=/Users/max/Documents/
+
+# Remote directory (local and remote leaf folder names should match)
+remote_dir=davs://webdav.data.rug.nl/you@rug.nl/Backup/Documents/
+
+# Remote username
+remote_user=you@rug.nl
+
+# Skip folders where all files are older than this many days (0 to disable)
+days_cutoff=10
+
+# Max files per duck sync batch (lower this if connections get interrupted)
+max_files=5000
+
+################################
+#### No changes needed below ###
+################################
+
+log_file=~/.backup.log
+
+# Verify local and remote leaf folder names match
+if [[ "$(basename "$local_dir")" != "$(basename "$remote_dir")" ]]; then
+    echo "ERROR: local and remote folder names don't match. Aborting." | tee -a "$log_file"
+    exit 1
+fi
+
+local_base=$(dirname "$local_dir")
+remote_base=$(dirname "$remote_dir")
+
+########## Functions ###########
+
+# Recursively split directories into chunks of <= max_files
+check_directory() {
+    local dir="$1"
+    local total_file_count
+    total_file_count=$(find "$dir" -type f | wc -l | tr -d ' ')
+
+    if [ "$total_file_count" -le "$max_files" ]; then
+        echo "$dir" >> "$tmp_results"
+    else
+        local has_subdirs=false
+        for subdir in "$dir"/*/; do
+            if [ -d "$subdir" ]; then
+                has_subdirs=true
+                check_directory "$subdir"
+            fi
+        done
+        if [ "$has_subdirs" = false ]; then
+            echo "$dir" >> "$tmp_results"
+        fi
+    fi
+}
+
+# Days since last file modification in a directory
+time_since_last_modification() {
+    local dir="$1"
+    local last_modified_time
+    last_modified_time=$(find "$dir" -type f -exec stat -f '%m' {} + 2>/dev/null | sort -n | tail -1)
+
+    if [ -z "$last_modified_time" ]; then
+        echo 0
+        return
+    fi
+    echo $(( ($(date +%s) - last_modified_time) / 86400 ))
+}
+
+# Sync a single folder, creating missing remote directories if needed
+sync_folder() {
+    local remote_path="$1"
+    local local_path="$2"
+
+    duck --sync "$remote_path" "$local_path" --existing upload -u "$remote_user" -y 2>&1 | tee ~/.sync_output.txt
+
+    if grep -q "Failure to read attributes" ~/.sync_output.txt 2>/dev/null; then
+        echo "Remote folder missing, creating: $remote_path" | tee -a "$log_file"
+        duck --username "$remote_user" --mkdir "$remote_path" 2>/dev/null
+        duck --sync "$remote_path" "$local_path" --existing upload -u "$remote_user" -y 2>&1 | tee ~/.sync_output.txt
+    fi
+
+    {
+        echo '==========================='
+        sed 's/\r/\n/g' ~/.sync_output.txt
+        echo '==========================='
+    } >> "$log_file"
+    rm -f ~/.sync_output.txt
+}
+
+############ Script ############
+
+echo "" | tee -a "$log_file"
+echo '++++++++++++++++++++++++++++++++' | tee -a "$log_file"
+echo "$(date "+%Y-%m-%d %H:%M:%S") — Starting backup" | tee -a "$log_file"
+
+# Build list of folders to sync
+tmp_results=$(mktemp)
+check_directory "$local_dir"
+mapfile -t folders < "$tmp_results"
+rm -f "$tmp_results"
+
+# Check remote is reachable
+echo "Checking connection to RDMS..." | tee -a "$log_file"
+if timeout 15s duck -l "davs://webdav.data.rug.nl/$remote_user/" -u "$remote_user" </dev/null &>/dev/null; then
+    echo "Connected. Processing ${#folders[@]} folders." | tee -a "$log_file"
+
+    for i in "${!folders[@]}"; do
+        path="${folders[$i]}"
+        relative_path="${path#"$local_dir"}"
+        remote_path="$remote_dir/$relative_path"
+
+        last_mod=$(time_since_last_modification "$path")
+        echo "" | tee -a "$log_file"
+        echo "--- Folder $((i+1))/${#folders[@]}: $relative_path" | tee -a "$log_file"
+
+        if [[ "$days_cutoff" -gt 0 && "$last_mod" -ge "$days_cutoff" ]]; then
+            echo "Skipping (last modified ${last_mod}d ago)" | tee -a "$log_file"
+        else
+            echo "Syncing (last modified ${last_mod}d ago)" | tee -a "$log_file"
+            sync_folder "$remote_path" "$path"
+        fi
+    done
+
+    # Fix carriage returns in log
+    sed -i '' 's/\r/\n/g' "$log_file"
+
+    osascript -e 'display notification "Backup completed successfully" with title "RDMS Backup"' 2>/dev/null
+else
+    echo "ERROR: Could not connect to RDMS. Check VPN/network." | tee -a "$log_file"
+    osascript -e 'display notification "Backup failed — check connection" with title "RDMS Backup"' 2>/dev/null
+fi
+
+echo "$(date "+%Y-%m-%d %H:%M:%S") — Backup finished" | tee -a "$log_file"
+echo '++++++++++++++++++++++++++++++++' | tee -a "$log_file"
+```
+
+Make it executable:
+
+```bash
+chmod +x ~/.backup_script.sh
+```
+
+Then create `~/Library/LaunchAgents/com.backup.duck.plist` to run it automatically:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.backup.duck</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-l</string>
+        <string>/Users/max/.backup_script.sh</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>86400</integer>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
+```
+
+> **Note:** `StartInterval` is in seconds — `86400` = once per day. The `-l` flag runs bash as a login shell so it can access your keychain for the saved password. Update the path to your actual home directory.
+
+Load the agent:
+
+```bash
+launchctl load ~/Library/LaunchAgents/com.backup.duck.plist
+```
+
+Check the log to verify it's working:
+
+```bash
+tail -f ~/.backup.log
+```
+
 ## Python Setup
 
 Python is essential for computational biology. Here's how to set up a clean, manageable Python environment.
