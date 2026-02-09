@@ -4,7 +4,7 @@
 
 - Start by getting access to your email and My University — you'll need both for many of the following tasks. You log in with your p-number, password, and two-factor authentication, so install the Google Authenticator app ([MFA setup instructions](https://www.rug.nl/society-business/centre-for-information-technology/security/multi-factor-authentication?lang=en)) on your phone first.
 - Contact Sandra Haan (our secretary, secbc@rug.nl) for administrative onboarding and to obtain your university card. Ask her to add you to the biotechnology email list as well. She will also have some forms for you to fill in, and she or Hugo can provide you with an office key.
-- Request access to the Habrok high-performance cluster here: [Habrok account request](https://rug.topdesk.net/tas/public/ssp/content/serviceflow?unid=84efb629e7484b728dbbf8dfef78fdad). If that link doesn't work, log in to the [CIT help portal (IRIS)](https://iris.service.rug.nl/) and search for "Habrok". In the form, mention that you're a computational PhD doing MD simulations.
+- Request access to the Habrok high-performance cluster here: [Habrok account request](https://rug.topdesk.net/tas/public/ssp/content/serviceflow?unid=a98b8758-b37a-4b6f-943e-0edf81b1be29). If that link doesn't work, log in to the [CIT help portal (IRIS)](https://iris.service.rug.nl/) and search for "Habrok". In the form, mention that you're a computational PhD doing MD simulations.
 - Some software can be downloaded from the [university software portal](https://iris.service.rug.nl/tas/public/ssp/content/detail/service?unid=eaf8ada50c7846b792798f1addb69f8e&from=d74117e5-047a-4378-bb03-3510cf8871d1). Other software like Office and Adobe can be downloaded directly from their websites after logging in with your @rug.nl email address. (This process changes occasionally — check IRIS for help if it doesn't work.)
 
 ## macOS Basics
@@ -30,15 +30,21 @@ Next, install [Homebrew](https://brew.sh/) — the package manager for macOS. It
 
 After installation, Homebrew may tell you to add its directory to your `PATH`. This is a standard UNIX concept: the `PATH` environment variable (view it with `echo $PATH`) tells the OS where to look for programs.
 
-> **Note:** In documentation, terminal commands are typically shown in `monospace` or `backticks`. A leading `$` indicates a shell prompt, e.g. `$ echo "hello"`.
-
 Most command-line programs install into standard locations automatically, but some end up in a separate directory that you need to add to your `PATH` manually.
+
+> **Note:** In documentation, terminal commands are typically shown in `monospace` or  \`backticks\` . A leading `$` indicates a shell prompt, e.g. `$ echo "hello"` means you should type `echo "hello"` into a shell. Don't confuse this with the $ used to denote UNIX variables:
+>```
+>$ my_variable=1
+>$ echo $my_variable
+>```
+>Note further that actually, variables in UNIX should additonally be [quoted](https://tldp.org/LDP/abs/html/quotingvar.html).
+
 
 ## Shell Configuration
 
 ### Bash vs. Zsh
 
-Since macOS Catalina (2019), the default shell is **zsh**. The older default was **bash**. Both are excellent and share most concepts (PATH, aliases, environment variables, scripting basics). The main differences are in startup files and some syntax details. Pick whichever you prefer:
+Since macOS Catalina (2019), the default shell is **zsh**. The older default was **bash**. Both are excellent and share most concepts (PATH, aliases, environment variables, scripting basics). The main differences are in startup files and some syntax details. Pick whichever you prefer, but **make sure to update**, don't just use the built-in version:
 
 | | **Bash** | **Zsh** |
 |---|---|---|
@@ -108,7 +114,7 @@ export PS1='\t [\u@home] \[\e[0;32m\]/\W/\[\e[m\] $ '
 PROMPT='%n@%m %F{green}%1~%f %# '
 ```
 
-Search for "customize bash prompt" or "customize zsh prompt" to learn more about the available escape codes.
+Google "customize bash prompt" or "customize zsh prompt" to learn more about the available escape codes.
 
 ### Tab Completion
 
@@ -139,7 +145,7 @@ zstyle ':completion:*' menu select
 
 Lines starting with `#` are comments and have no effect.
 
-The rest of my config contains custom variables and aliases — you'll build up your own collection over time. There are many good "dotfiles" repositories online with useful suggestions for aliases, exports, and functions.
+The rest of my config contains custom variables and aliases — you'll build up your own collection over time. There are many good "dotfiles" repositories online (e.g. [here](https://github.com/jflorez29/dotfiles)) with useful suggestions for aliases, exports, and functions.
 
 ## macOS Defaults & Tweaks
 
@@ -169,7 +175,6 @@ brew install go pyenv
 brew install yt-dlp
 ```
 
-> **Note:** `exa` has been replaced by `eza` (actively maintained fork). `youtube-dl` has been replaced by `yt-dlp` (much faster, actively maintained). `autojump` is superseded by `zoxide` (faster, works with both bash and zsh).
 
 Some useful GUI applications can be installed with `brew install --cask`:
 
@@ -254,13 +259,27 @@ The university's HPC cluster is called **Habrok** (the previous cluster "Peregri
 ssh pnumber@login1.hb.hpc.rug.nl
 ```
 
-> **Note:** Replace `pnumber` with your actual p-number (e.g. `p123456`). You may need to be on the [university VPN](https://www.rug.nl/society-business/centre-for-information-technology/helpdesk/it-self-service/vpn/?lang=en) if connecting from off-campus.
+> **Note:** Replace `pnumber` with your actual p-number (e.g. `p123456`). You may need to be on the [university VPN](https://doc.web.rug.nl/books/website-XVh/page/website-vpn-instellen-setup-vpn#english) if connecting from off-campus.
 
 See the [Habrok documentation](https://wiki.hpc.rug.nl/habrok/start) for full details, including how to submit jobs with the SLURM workload manager.
 
 ### SSH Basics
 
 `ssh` connects you to a remote UNIX computer — once connected, everything you type runs on that remote system. Other useful tools for working with remote machines are `scp` and `rsync` (for transferring files).
+
+### SSH Keys
+
+By default, SSH asks for your password every time. You can set up SSH keys for passwordless login:
+
+```bash
+# generate a key pair (press Enter to accept defaults)
+ssh-keygen -t ed25519
+
+# copy your public key to the remote server
+ssh-copy-id pnumber@login1.hb.hpc.rug.nl
+```
+
+After this, `ssh` will use your key instead of asking for a password. Your private key stays in `~/.ssh/id_ed25519` (never share this), and the public key (`~/.ssh/id_ed25519.pub`) gets added to the remote server.
 
 ### SSH Config for Convenience
 
@@ -272,11 +291,11 @@ Host habrok
     User pnumber
 ```
 
-Now you can simply run `ssh habrok` to connect.
+Now you can simply run `ssh habrok` to connect. This also works with `scp` and `rsync` (e.g. `scp file.txt habrok:~/`).
 
 ### Connecting to Your Own Mac Remotely
 
-You can find your Mac's hostname by running `hostname`, and then connect remotely with `ssh username@hostname`. This requires a [VPN connection to the university network](https://www.rug.nl/society-business/centre-for-information-technology/helpdesk/it-self-service/vpn/?lang=en) when off-campus.
+You can find your Mac's hostname by running `hostname`, and then connect remotely with `ssh username@hostname`. This requires a VPN connection to the university network when off-campus.
 
 ## Python Setup
 
@@ -356,7 +375,7 @@ Track your project dependencies so others (and future-you) can recreate the envi
 
 ## Code Editor
 
-For day-to-day coding, we recommend **Visual Studio Code** (VS Code). It's free, extensible, and widely used in both academia and industry:
+For day-to-day coding, I recommend **Visual Studio Code** (VS Code). It's free, extensible, and widely used in both academia and industry:
 
 ```bash
 brew install --cask visual-studio-code
@@ -376,6 +395,14 @@ code --install-extension ms-python.python
 code --install-extension ms-vscode-remote.remote-ssh
 code --install-extension eamodio.gitlens
 ```
+
+### A Note on Jupyter Notebooks
+
+You may come across people who do all their coding in [Jupyter notebooks](https://jupyter.org/) (`.ipynb` files). Notebooks are great for exploration and presentation — having code, results, and explanatory text together in one document is very convenient for data analysis and sharing findings.
+
+However, for day-to-day development, a proper IDE like VS Code is much more productive. You get features that notebooks lack: code navigation, refactoring tools, integrated debugging, linting, and git integration. A good workflow is to **develop and debug in VS Code**, and use notebooks when you want to present results or do interactive exploration. VS Code can also open and run notebooks directly (via the Jupyter extension), giving you the best of both worlds.
+
+If AI coding is your thing, you can also look into the VS Code-based [Cursor](https://cursor.com/).
 
 ## Git and Version Control
 
@@ -407,9 +434,15 @@ git log --oneline           # view commit history
 
 [GitHub](https://github.com/) is the most popular platform for hosting git repositories. Sign up with your university email to get [GitHub Education](https://education.github.com/) benefits, which include free GitHub Pro access (private repos, Copilot, etc.).
 
-### Finding Answers
+### Try It Out
 
-[Stack Overflow](https://stackoverflow.com/) remains an invaluable resource for programming questions — most problems you'll encounter have already been answered there with vetted, peer-reviewed solutions. AI assistants (ChatGPT, Claude) are also excellent for quick questions and generating ready-to-use commands, but keep in mind that Stack Overflow answers have been reviewed by the community, which adds an extra layer of reliability.
+You've probably already noticed a few missing or outdated bits in this guide — why not test your git skills right away by suggesting some edits? Fork [this repository](https://github.com/mf-rug/onboarding), make your changes, and open a pull request.
+
+## Finding Answers
+
+[Stack Overflow](https://stackoverflow.com/) is an invaluable resource for programming questions — most problems you'll encounter have already been answered there with vetted, peer-reviewed solutions. We also have a private [Stack Overflow for Teams](https://stackoverflowteams.com/c/rug-comp-biotech/home) instance for our group, which is a good place to ask lab-specific questions and build up a shared knowledge base.
+
+AI assistants (ChatGPT, Claude, etc.) are also excellent for quick questions and generating ready-to-use commands — see the next section for more on those. Keep in mind that Stack Overflow answers have been reviewed by the community, which adds an extra layer of reliability compared to AI-generated responses.
 
 ## AI-Assisted Coding
 
