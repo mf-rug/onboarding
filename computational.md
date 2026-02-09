@@ -7,6 +7,16 @@
 - Request access to the Habrok high-performance cluster here: [Habrok account request](https://rug.topdesk.net/tas/public/ssp/content/serviceflow?unid=a98b8758-b37a-4b6f-943e-0edf81b1be29). If that link doesn't work, log in to the [CIT help portal (IRIS)](https://iris.service.rug.nl/) and search for "Habrok". In the form, mention that you're a computational PhD doing MD simulations.
 - Some software can be downloaded from the [university software portal](https://iris.service.rug.nl/tas/public/ssp/content/detail/service?unid=eaf8ada50c7846b792798f1addb69f8e&from=d74117e5-047a-4378-bb03-3510cf8871d1). Other software like Office and Adobe can be downloaded directly from their websites after logging in with your @rug.nl email address. (This process changes occasionally — check IRIS for help if it doesn't work.)
 
+## University IT Systems
+
+A few useful university services to be aware of:
+
+- **[My University (Intranet)](https://myuniversity.rug.nl/infonet/medewerkers/dashboard/)** — The staff dashboard. Check out the **IT section** there for guides on email, Wi-Fi, printing, and more.
+- **[IRIS Knowledge Base](https://rug.topdesk.net/tas/public/ssp/)** — The IT self-service portal. Use it to request accounts (Habrok, VPN, etc.), report issues, and browse how-to articles.
+- **[University Workspace (UWP)](https://uwp.rug.nl/)** — A virtual Windows desktop you can access from any browser. Useful when you need a Windows-only application or want to access university systems from a non-managed device.
+- **[Laptop/Tablet Reimbursement](https://myuniversity.rug.nl/infonet/medewerkers/werk-en-carriere/voorwaarden/vergoedingen/tabletregeling/)** — The university partially reimburses the purchase of a laptop or tablet for work use.
+- **[Print Portal](https://rug.mycampusprint.nl/Print/Default)** — Upload documents to print at any campus printer using your university card.
+
 ## macOS Basics
 
 Below are some instructions for making your Mac a productive environment. You may already know some of these — apologies if parts are a bit basic.
@@ -303,7 +313,7 @@ You can find your Mac's hostname by running `hostname`, and then connect remotel
 
 Avoid using Dropbox, OneDrive, or other third-party cloud services for university data — there are privacy and data governance concerns with storing research data on non-EU servers. That said, they're tolerated for non-critical files (papers, presentations, etc.).
 
-**Google Drive** via your university account (`@rug.nl`) is hosted by the university and offers unlimited storage. It's the recommended option for sharing files with colleagues:
+**Google Drive** via your university account (`@rug.nl`) is hosted by the university and offers unlimited storage. It's the recommended option for sharing files with colleagues. The desktop app can be useful, install via:
 
 ```bash
 brew install --cask google-drive
@@ -353,13 +363,24 @@ launchctl load ~/Library/LaunchAgents/com.syncthing.syncthing.plist
 
 Then visit [http://localhost:8384](http://localhost:8384) to confirm it's running. After a reboot, Syncthing will start automatically.
 
+### Y-Drive (Group Shared Drive)
+
+The group has a shared network drive (the "Y-drive") for internal files. On Windows machines this is mapped automatically, but on Mac you need to connect manually:
+
+1. In Finder, go to **Go → Connect to Server** (`Cmd + K`)
+2. Enter `smb://workspace.rug.nl/ydrive` and click Connect
+3. Log in with your university credentials
+
+You can add it to your Favourite Servers for quick access in the future.
+
 ### RDMS (University Backup Storage)
 
 All RUG employees have access to **unlimited backup space** on RDMS (Research Data Management Service). See the [RDMS documentation](https://wiki.hpc.rug.nl/rdms/start) for full details.
 
 **Connecting via Finder:** Use `Cmd + K` (Go → Connect to Server) and enter `https://webdav.data.rug.nl`. This gives a convenient overview of your files, but is very slow — don't attempt to copy large amounts of data or calculate folder sizes through Finder.
 
-![Finder Connect to Server dialog showing RDMS WebDAV connection](rdms.png)
+<img src="rdms.png" alt="Finder Connect to Server dialog showing RDMS WebDAV connection" width="450"/><br>
+
 
 **Connecting via command line:** The RDMS wiki recommends iCommands, but those can be tricky to get working on macOS. A reliable alternative is [Cyberduck](https://cyberduck.io/), specifically its command-line interface `duck`:
 
