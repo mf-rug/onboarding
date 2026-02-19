@@ -1,5 +1,22 @@
 # Onboarding: Setting Up Your Mac for Computational Biology
 
+## Contents
+
+- [Administrative](#administrative)
+- [University IT Systems](#university-it-systems)
+- [macOS Basics](#macos-basics)
+- [Terminal Setup](#terminal-setup)
+- [Homebrew](#homebrew)
+- [Shell Configuration](#shell-configuration)
+- [macOS Defaults & Tweaks](#macos-defaults--tweaks)
+- [HPC Cluster Access (Habrok)](#hpc-cluster-access-habrok)
+- [File Sharing & Backups](#file-sharing--backups)
+- [Python Setup](#python-setup)
+- [Code Editor](#code-editor)
+- [Git and Version Control](#git-and-version-control)
+- [Finding Answers](#finding-answers)
+- [AI-Assisted Coding](#ai-assisted-coding)
+
 ## Administrative
 
 - Start by getting access to your email and My University — you'll need both for many of the following tasks. You log in with your p-number, password, and two-factor authentication, so install the Google Authenticator app ([MFA setup instructions](https://www.rug.nl/society-business/centre-for-information-technology/security/multi-factor-authentication?lang=en)) on your phone first.
@@ -309,11 +326,11 @@ You can find your Mac's hostname by running `hostname`, and then connect remotel
 
 ### Copying Files Back from a Remote Server (Reverse Tunnel)
 
+Picture this: you're SSHed into a cluster, you've just run a simulation, and you're looking at the output files right there in the terminal. You want them on your local machine. The obvious approach is to open a second terminal on your Mac and run `rsync` or `scp` from there — but that means copying the full path, switching windows, and keeping track of two sessions. Isn't there a way to just trigger the download from where you already are, on the remote?
+
+Yes. The trick is a **reverse SSH tunnel**: when you connect to the cluster, you tell SSH to also forward a port on the remote back to your Mac's SSH daemon. The cluster can then reach your Mac through that tunnel and push files directly with `rsync`.
+
 The two main clusters people in the lab use are **Habrok** (`login1.hb.hpc.rug.nl`) and **Snellius** (`snellius.surf.nl`). The technique below applies to both — examples use Snellius (with the alias `ss`), but the same steps work for Habrok or any other remote.
-
-**The problem:** you're logged into a remote cluster and want to push output files back to your Mac, without opening a second inbound connection (and without jumping through the VPN).
-
-The solution is a **reverse SSH tunnel**: when you connect to the remote, you tell SSH to forward a port on the remote back to your Mac's SSH daemon. The remote can then reach your Mac through that tunnel using `rsync`.
 
 **Step 1 — Connect with a reverse tunnel** (from your local Mac):
 
