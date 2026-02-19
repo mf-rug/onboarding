@@ -307,6 +307,91 @@ Now you can simply run `ssh habrok` to connect. This also works with `scp` and `
 
 You can find your Mac's hostname by running `hostname`, and then connect remotely with `ssh username@hostname`. This requires a VPN connection to the university network when off-campus.
 
+### Copying Files Back from a Remote Server (Reverse Tunnel)
+
+The two main clusters people in the lab use are **Habrok** (`login1.hb.hpc.rug.nl`) and **Snellius** (`snellius.surf.nl`). The technique below applies to both — examples use Snellius (with the alias `ss`), but the same steps work for Habrok or any other remote.
+
+**The problem:** you're logged into a remote cluster and want to push output files back to your Mac, without opening a second inbound connection (and without jumping through the VPN).
+
+The solution is a **reverse SSH tunnel**: when you connect to the remote, you tell SSH to forward a port on the remote back to your Mac's SSH daemon. The remote can then reach your Mac through that tunnel using `rsync`.
+
+**Step 1 — Connect with a reverse tunnel** (from your local Mac):
+
+```bash
+ssh -R 2222:localhost:22 ss
+```
+
+This makes `localhost:2222` on the remote point back to port 22 on your Mac.
+
+**Step 2 — Create an SSH key on the remote** (for logging into your Mac):
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/mac_key
+```
+
+**Step 3 — Authorise that key on your Mac:**
+
+On the remote, print the public key:
+
+```bash
+ssh-keygen -y -f ~/.ssh/mac_key
+```
+
+Copy the line it prints (starts with `ssh-ed25519 …`), then on your **local Mac** add it to:
+
+```bash
+nano ~/.ssh/authorized_keys
+```
+
+Fix permissions if needed (on your Mac):
+
+```bash
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+```
+
+**Step 4 — Add a `mac` host alias on the remote** (in `~/.ssh/config` on the remote):
+
+```sshconfig
+Host mac
+  HostName localhost
+  Port 2222
+  User yourLocalUsername
+  IdentityFile ~/.ssh/mac_key
+  IdentitiesOnly yes
+```
+
+The `IdentitiesOnly yes` line is important: without it, SSH may try other keys or fall back to a password prompt when you use a non-default key filename.
+
+**Step 5 — Push files with rsync:**
+
+```bash
+rsync -av -e ssh file.txt mac:/local/path/
+rsync -av -e ssh results/ mac:/local/path/
+```
+
+**Optional: `dl` shortcut** — add this to your shell startup file on the remote (`~/.bashrc` or `~/.zshrc`) to push to a fixed local folder with a short command:
+
+```bash
+dl() {
+  rsync -avh --progress -e ssh "$@" mac:/local/path/
+}
+```
+
+Reload with `source ~/.bashrc`, then just run `dl results/` or `dl file.txt`.
+
+**Verifying it works:** To watch your Mac accept the connection in real time, run this on your Mac while testing from the remote:
+
+```bash
+log stream --style syslog --predicate 'process == "sshd"' --info
+```
+
+You should see a line like `Accepted publickey for yourLocalUsername from ::1 port ...`.
+
+**Troubleshooting notes:**
+- If the reverse tunnel port doesn't open, the server may have `AllowTcpForwarding` disabled — contact the cluster admins.
+- If `rsync` still prompts for a password despite the key being set up, double-check that `IdentitiesOnly yes` is in the `mac` host block and that the `IdentityFile` path is correct.
+
 ## File Sharing & Backups
 
 ### Cloud Storage
