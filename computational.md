@@ -322,7 +322,7 @@ Now you can simply run `ssh habrok` to connect. This also works with `scp` and `
 
 ### Connecting to Your Own Mac Remotely
 
-You can find your Mac's hostname by running `hostname`, and then connect remotely with `ssh username@hostname`. This requires a VPN connection to the university network when off-campus.
+You can find your Mac's local IP address by running `ipconfig getifaddr en0`, and then connect from another machine with `ssh username@<that-ip>`. This requires a VPN connection to the university network when off-campus.
 
 ### Copying Files Back from a Remote Server (Reverse Tunnel)
 
