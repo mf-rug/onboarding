@@ -322,7 +322,18 @@ Now you can simply run `ssh habrok` to connect. This also works with `scp` and `
 
 ### Connecting to Your Own Mac Remotely
 
-You can find your Mac's local IP address by running `ipconfig getifaddr en0`, and then connect from another machine with `ssh username@<that-ip>`. This requires a VPN connection to the university network when off-campus.
+To find your Mac's local IP address, use `ipconfig getifaddr` — but the interface name depends on how you're connected:
+
+- `en0` — Wi-Fi on most MacBooks; Ethernet on some desktop Macs
+- `en1` (or higher) — Ethernet via a USB-C/Thunderbolt adapter, or Wi-Fi if `en0` is taken by Ethernet
+
+If you're not sure which applies, just list all active addresses at once:
+
+```bash
+ifconfig | grep "inet " | grep -v 127.0.0.1
+```
+
+This shows every non-loopback IP on your machine — pick the one on your local network (typically `192.168.x.x` or `10.x.x.x`). Then connect from another machine with `ssh username@<that-ip>`. This requires a VPN connection to the university network when off-campus.
 
 ### Copying Files Back from a Remote Server (Reverse Tunnel)
 
