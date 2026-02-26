@@ -2,17 +2,12 @@
 
 ## Using Habrok in the command line
 
-Habrok is the supercomputing cluster of the RUG: a powerful remote computer that you access through the command line. Instead of running heavy programs on your own laptop, you connect to Habrok and ask it to run jobs using strong CPUs or GPUs. To use Habrok, you first need an account and access permissions. Instructions for requesting access and connecting can be found [here](https://wiki.hpc.rug.nl/habrok/connecting_to_the_system/connecting). 
+Habrok is the supercomputing cluster of the RUG. Instead of running heavy programs on your own laptop, you connect to Habrok and ask it to run jobs using strong CPUs or GPUs. To use Habrok, you first need an account and access permissions. Instructions for requesting access and connecting can be found [here](https://wiki.hpc.rug.nl/habrok/connecting_to_the_system/connecting). 
 
 The command line (or terminal) is a text-based way to interact with a computer.
-Instead of clicking folders and buttons, you type commands to:
+Instead of clicking folders and buttons, you type commands to move between folders, run programs, and submit jobs to the cluster.
 
-- move between folders
-- run programs
-- submit jobs to the cluster
-- manage files
-
-If you have never used the command line before, there are several useful tutorials you can do: 
+If you have never used the command line before, there are some useful tutorials you can do: 
 - [Shell novices:](https://swcarpentry.github.io/shell-novice/) A beginner-friendly introduction to the command line.
 - [Habrok tutorial:](https://wiki.hpc.rug.nl/habrok/additional_information/course_material/exercises_solutions) Exercises specific for Habrok cluster
 
@@ -127,15 +122,26 @@ For ligands, you can provide either:
 - A CCD code (ligand name used in PDB files, e.g. FAD, MG), search codes [here](https://www.ebi.ac.uk/pdbe-srv/pdbechem/)
 - A SMILES string (chemical representation of the molecule)
 
+Example of .yaml file:
+```bash
+sequences:
+  - protein:
+      id: [A]
+      sequence: MKVPEAAISRLITYLRILEELEAQGVHRTSSEQLGELAQVTAFQVRKDLSYFGSYGTRGVGYTVPVLKREL
+  - ligand:
+      id: [NADH]
+      ccd: NAI
+```
+
 ### Step 3 - Create job submission script 
 
-The job script requests resources from Habrok and needs to be created in you working folder (`scratch/pxxxxxx/Boltz`). Create a file called run_boltz.sh:
+The job script requests resources from Habrok and needs to be created in you working folder (`scratch/pxxxxxx/Boltz`). Create a .sh file, for example:
 
 ```bash
 nano run_boltz.sh
 ```
 
-Example:
+Example of submission script:
 ```bash
 #!/bin/bash
 #SBATCH --time=01:00:00
