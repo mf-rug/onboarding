@@ -201,7 +201,7 @@ $ nano muts_energ.tab
 
 - You should see something like this:
 
-![nano screenshot](images/image1.png)
+![nano screenshot](../images/image1.png)
 
 - You can simply start typing text now. Write the following mutations and numbers separated by a tab:
 
@@ -332,9 +332,9 @@ $ cat muts_energ.tab | sed -E 's/^([A-Z])/\1	/'
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2      \3/'
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]{1,3})([A-Z])/\1    \2      \3/'
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1    \2      \3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1 \2 \3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]{1,3})([A-Z])/\1 \2 \3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1 \2 \3/'
 ```
 
 </details>
@@ -345,7 +345,7 @@ $ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1    \2    
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2      \3/' | sort -n -k2
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1 \2 \3/' | sort -n -k2
 ```
 
 </details>
@@ -363,7 +363,7 @@ F	248	A	1.50
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2      \3/' | sort -n -k2 > muts_energ2.tab
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1 \2 \3/' | sort -n -k2 > muts_energ2.tab
 ```
 
 </details>
