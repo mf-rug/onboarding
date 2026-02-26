@@ -309,8 +309,9 @@ Such_A_simple_example
 ```bash
 $ echo F248A | sed -E 's/^([A-Z])/\1	/'
 ```
-
 </details>
+
+- Now beware of one thing: copy pasting works quite well in the terminal, with the exception of tabs. If you go with the cursor to the part of the command where we substitute with tabs, you will notice that they were replaced by multiple spaces. Delete the spaces and add the tab again (remember to use `CTRL + V`).
 
 
 ```bash
@@ -334,9 +335,9 @@ $ cat muts_energ.tab | sed -E 's/^([A-Z])/\1	/'
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1 \2 \3/'
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]{1,3})([A-Z])/\1 \2 \3/'
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1 \2 \3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2    \3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]{1,3})([A-Z])/\1    \2    \3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1    \2    \3/'
 ```
 
 </details>
@@ -347,7 +348,7 @@ $ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1 \2 \3/'
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1 \2 \3/' | sort -n -k2
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2    \3/' | sort -n -k2
 ```
 
 </details>
@@ -365,7 +366,7 @@ F	248	A	1.50
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1 \2 \3/' | sort -n -k2 > muts_energ2.tab
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2    \3/' | sort -n -k2 > muts_energ2.tab
 ```
 
 </details>
@@ -411,13 +412,12 @@ $ which bash
 ```bash
 $ #!/usr/bin/env bash
 
-cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1       \2      \3/' | sort -n -k2 > muts_energ2.tab
+cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2    \3/' | sort -n -k2 > muts_energ2.tab
 cat muts_energ2.tab | tr '\t' ' ' | cut -d ' ' -f1-3 > mutations.tab
 ```
 
 </details>
 
-- Now beware of one thing: copy pasting works quite well in the terminal, with the exception of tabs. If you go with the cursor to the part of the command where we substitute with tabs, you will notice that they were replaced by multiple spaces. Delete the spaces and add the tab again (in nano you don't need CTRL+V, you can simply press <TAB>)
 - Save the file. Now we need to do one last thing to make this script file ready: we need to make it executable. For that we use the `chmod` command, which can give the script file the corresponding permission with the `-x` option.
 
 ```bash
