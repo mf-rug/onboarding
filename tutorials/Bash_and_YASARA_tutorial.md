@@ -4,25 +4,25 @@
 
 This exercise is meant to give an introduction to basic computational methods for mutagenesis and protein engineering. It will cover diverse methods including command line (bash) input and scripting, molecular simulations and molecular visualization. It requires a bash command line (the standard terminal for most linux systems and MacOS, but also available for Windows 10) and YASARA. In this manual, the command line is depicted as follow:
 
-Bash input is indicated with a leading “$” sign in grey background:
+Bash input is indicated with a leading `$` sign in grey background:
 
 ```bash
  $ input
 ```
 
-Bash output is the same, but without the “$” sign:
+Bash output is the same, but without the `$` sign:
 
 ```bash
  output
 ```
 
-YASARA command line input is indicated with a leading “>” sign:
+YASARA command line input is indicated with a leading `>` sign:
 
 ```yasara
 > input
 ```
 
-YASARA output is the same, but without the “>” sign:
+YASARA output is the same, but without the `>` sign:
 
 ```yasara
 output
@@ -34,7 +34,7 @@ output
 
 ### Create folders and learn basic commands
 
-- Fire up a terminal (Mac: press cmd+space and type “terminal”, linux: press Ctrl+Alt+T). Although, better use the much better [iTerm2](https://iterm2.com/) terminal.
+- Fire up a terminal (Mac: press cmd+space and type `terminal`, linux: press Ctrl+Alt+T). Although, better use the much better [iTerm2](https://iterm2.com/) terminal.
 - The terminal usually opens in the home directory. To see your current directory use the *print working directory* command `pwd`:
 
 ```bash
@@ -73,20 +73,21 @@ $ pwd
 /Users/max/university/exercise
 ```
 
-- Did you type `pwd` every time? Note that you can use the arrow keys up and down to access your command history. This saves a lot of time and you can also modify the old command.
-- Learn how to use tab completion. When you read <tab>, don’t type this, but press the TAB key on your keyboard
+- Did you type `pwd` every time? You can use the arrow keys up and down to access your command history. This saves a lot of time and you can also modify the old command.
+
+- Learn how to use TAB completion. When you read `<tab>`, don’t type this, but press the `TAB` key on your keyboard.
 
 ```bash
 $ cd uni<tab>
 ```
 
-The command line should now fill in the rest of the foldername (works also with filenames)
+- The command line should now fill in the rest of the foldername (works also with filenames)
 
 ```bash
 $ cd university/
 ```
 
-If you press TAB again it will also fill in the name of the folder inside the folder (at least if there is only one file/folder, otherwise you might have to type the first few letters of the folder and then press TAB.
+- If you press TAB again it will also fill in the name of the folder inside the folder (at least if there is only one file/folder, otherwise you might have to type the first few letters of the folder and then press TAB.
 
 ```bash
 $ cd university/<tab>
@@ -201,7 +202,7 @@ $ nano muts_energ.tab
 
 - You should see something like this:
 
-![nano screenshot](image1.png)
+![nano screenshot](../images/image1.png)
 
 - You can simply start typing text now. Write the following mutations and numbers separated by a tab:
 
@@ -211,7 +212,7 @@ T78N	2.00
 F248A	1.50
 ```
 
-- At  the bottom of the nano editor, you can see the commands. ^ means to press the CTRL key. If you press CTRL+X, you exit nano, but before, it will ask you if you want to save the file. Enter "y" and click enter to save the file under the name muts_energ.tab. Confirm the content of the file with cat:
+- At  the bottom of the nano editor, you can see the commands. ^ means to press the CTRL key. If you press CTRL+X, you exit nano, but before, it will ask you if you want to save the file. Enter `y` and click enter to save the file under the name muts_energ.tab. Confirm the content of the file with cat:
 
 ```bash
 $ cat muts_energ.tab
@@ -221,7 +222,7 @@ F248A	1.50
 ```
 
 - This example file is representative of a list of mutations as it might come from some other program or as you noted them down in an excel list or anywhere else. The numbers in the second column could mean for example the energy that a program calculated for this mutation. We will use this example file to understand one of the most important features of bash scripting, which is called "piping".
-- Piping is the process of taking the output of one command and handing it over to a second command. For example, if we would want to use this list of mutations and sort them, we could combine the cat command, with the sort command, and we connect them with a pipe "|":
+- Piping is the process of taking the output of one command and handing it over to a second command. For example, if we would want to use this list of mutations and sort them, we could combine the cat command, with the sort command, and we connect them with a pipe `|`:
 
 ```bash
 $ cat muts_energ.tab | sort
@@ -246,16 +247,16 @@ $ cat muts_energ.tab | sort -n -k2 | tail -1
 T78N	2.00
 ```
 
-- If we wanted to sort this list by the residue number, though, we would face a problem: the sort command cannot be told directly to ignore the first and last character of this first column entry and only use the number in between. What we could do is to separate the amino acid letter and the residue number by tabs. This kind of text processing is easily done in bash with the help of "[Regular Expressions](https://www.regular-expressions.info/)" (Regexp).
-- A Regexp is a text string that describes a text search pattern. This is an advanced way of doing wildcard (placeholder) search patterns, as for example "*.txt" in many programs (and also in bash), which will match any file that ends in ".txt". In this case, the asterisk "*" matches any text. In bash, you can also use the "?", which will match any character, but only one at a time. So, "?.txt" will match e.g. A.txt or Z.txt, but not test.txt. Regexp is the same, only that it has many more options.
-- In bash, many commands understand regexp. One of the most famous ones, is sed. Everything within the sed command has to be enclosed in single quotes, because regexp uses so many special characters that otherwise would be interpreted by bash differently. The most common use of sed, is to replace a string that we match, with a new string, and the match and the substitution are separated by a slash "/". The command for substitution is "s", and comes at the start. sed usually uses a file as input, but we can also pipe the output of echo to it:
+- If we wanted to sort this list by the residue number, though, we would face a problem: the sort command cannot be told directly to ignore the first and last character of this first column entry and only use the number in between. What we could do is to separate the amino acid letter and the residue number by tabs. This kind of text processing is easily done in bash with the help of [Regular Expressions](https://www.regular-expressions.info/) (Regexp).
+- A Regexp is a text string that describes a text search pattern. This is an advanced way of doing wildcard (placeholder) search patterns, as for example `*.txt` in many programs (and also in bash), which will match any file that ends in `.txt`. In this case, the asterisk `*` matches any text. In bash, you can also use the `?`, which will match any character, but only one at a time. So, `?.txt` will match e.g. A.txt or Z.txt, but not test.txt. Regexp is the same, only that it has many more options.
+- In bash, many commands understand regexp. One of the most famous ones, is sed. Everything within the sed command has to be enclosed in single quotes, because regexp uses so many special characters that otherwise would be interpreted by bash differently. The most common use of sed, is to replace a string that we match, with a new string, and the match and the substitution are separated by a slash `/`. The command for substitution is `s`, and comes at the start. sed usually uses a file as input, but we can also pipe the output of echo to it:
 
 ```bash
 $ echo A_simple_example | sed 's/_/ /'
 A simple_example
 ```
 
-- Here we told to program to find the literal character "_" and substitute it with a space. As you can see, the sed command only replaced the first occurrence of the match. If we wanted to replace all matches, we can add the g option to the end of the command:
+- Here we told to program to find the literal character `_` and substitute it with a space. As you can see, the sed command only replaced the first occurrence of the match. If we wanted to replace all matches, we can add the g option to the end of the command:
 
 ```bash
 $ echo A_simple_example | sed 's/_/ /g'
@@ -291,14 +292,14 @@ The_simple_example
 ```
 
 - Here we used a range of characters, all characters from A to Z that are upper case.
-- Another useful feature is called capturing. Since this was introduced later in regexp development, this extended syntax is not included by default in sed. We need to activate it using sed's `-E` option. Then we can use round brackets to store the match. We can access the saved match in the substitution using the backslash "\" followed by the group number (since you can use more than one group).
+- Another useful feature is called capturing. Since this was introduced later in regexp development, this extended syntax is not included by default in sed. We need to activate it using sed's `-E` option. Then we can use round brackets to store the match. We can access the saved match in the substitution using the backslash `\` followed by the group number (since you can use more than one group).
 
 ```bash
 $ echo A_simple_example | sed -E 's/([A-Z])/Such_\1/g'
 Such_A_simple_example
 ```
 
-- Back to our example file with mutations. To introduce a tab character after the amino acid, which is at the first character position, we will use a regexp that matches the first character. Since it is such a common thing to be interested in matching the beginning of a line, regexp has a simple shortcut character for this: `^`. `^` is a so-called anchor; it does not match a character itself, but a position. In this case, it matches directly before the first character. To match the first character, we need now a wildcard (placeholder) to match the character that follows `^`. In regexp, we can use the dot "." to match any character: `^.` matches the R in R209E, and the T in T78N. If we add another dot, we would match the first two characters: `^..` matches F2 of F248A.
+- Back to our example file with mutations. To introduce a tab character after the amino acid, which is at the first character position, we will use a regexp that matches the first character. Since it is such a common thing to be interested in matching the beginning of a line, regexp has a simple shortcut character for this: `^`. `^` is a so-called anchor; it does not match a character itself, but a position. In this case, it matches directly before the first character. To match the first character, we need now a wildcard (placeholder) to match the character that follows `^`. In regexp, we can use the dot `.` to match any character: `^.` matches the R in R209E, and the T in T78N. If we add another dot, we would match the first two characters: `^..` matches F2 of F248A.
 - Here comes your first exercise: with all of the above learned, try to come up with a regexp that you use in a sed command, so that you insert a tab after the first character of the mutation. My solution is written below, click on the arrow reveal it.
 
 <details>
@@ -307,9 +308,7 @@ Such_A_simple_example
 ```bash
 $ echo F248A | sed -E 's/^([A-Z])/\1	/'
 ```
-
 </details>
-
 
 ```bash
 F	248A
@@ -326,18 +325,19 @@ $ cat muts_energ.tab | sed -E 's/^([A-Z])/\1	/'
 
 </details>
 
-- Having introduced successfully a tab after the original amino acid, we now want to introduce also a tab after the replacement amino acid. We can expand our regexp to match the entire pattern of the three parts letter, number, letter, save each part separately in a group, and then substitute with the three groups separated by tabs. We need to use one additional trick to make this work, which has to do with repetition of characters. The amino acid number of our protein can be between 1-542. In regex, this cannot be matched directly with `[1-542]`, which would actually match a single digit between 1 and 5, and additionally the digits 4 and 2 (which were already included). This inconvenience is due to regexps being primarily made for text and not for number processing. We can work around in two ways: we could use repetition, either with the plus "+", which means "match at least once": `[0-9]+`, or with exact numbers in curly brackets, where `[0-9]{1,3}` matches a digit repeated between one and three times. Alternatively we can use the question mark "?" to make a match optional, in which case we could use `[0-9][0-9]?[0-9]?` to match at least one digit, possibly a second, and possibly a third digit. Thus we have three possible solutions:
+- Having introduced successfully a tab after the original amino acid, we now want to introduce also a tab after the replacement amino acid. We can expand our regexp to match the entire pattern of the three parts letter, number, letter, save each part separately in a group, and then substitute with the three groups separated by tabs. We need to use one additional trick to make this work, which has to do with repetition of characters. The amino acid number of our protein can be between 1-542. In regex, this cannot be matched directly with `[1-542]`, which would actually match a single digit between 1 and 5, and additionally the digits 4 and 2 (which were already included). This inconvenience is due to regexps being primarily made for text and not for number processing. We can work around in two ways: we could use repetition, either with the plus `+`, which means "match at least once": `[0-9]+`, or with exact numbers in curly brackets, where `[0-9]{1,3}` matches a digit repeated between one and three times. Alternatively we can use the question mark `?` to make a match optional, in which case we could use `[0-9][0-9]?[0-9]?` to match at least one digit, possibly a second, and possibly a third digit. Thus we have three possible solutions:
 
 <details>
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2      \3/'
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]{1,3})([A-Z])/\1    \2      \3/'
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1    \2      \3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1\t\2\t\3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]{1,3})([A-Z])/\1\t\2\t\3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1\t\2\t\3/'
 ```
-
 </details>
+
+- The tab is written as `\t` here. You can keep this or replace it with a `TAB` (remember to use `CTRL + V`).
 
 - So… Why did we do all this again? Because now we can sort the file by residue number:
 
@@ -345,7 +345,7 @@ $ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1    \2    
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2      \3/' | sort -n -k2
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1\t\2\t\3/' | sort -n -k2
 ```
 
 </details>
@@ -363,7 +363,7 @@ F	248	A	1.50
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2      \3/' | sort -n -k2 > muts_energ2.tab
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1\t\2\t\3/' | sort -n -k2 > muts_energ2.tab
 ```
 
 </details>
@@ -377,7 +377,7 @@ Congrats, you mastered regular expressions! You have now a powerful tool at hand
 $ cat muts_energ2.tab | tr '\t' ' '
 ```
 
-- This will replace all tabs with a space. Instead of \t we can also write a literal tab, both works. The last adjustment is to get rid of the energies. In YASARA, we are only interested in the mutations. We can use `cut` to divide a string into fragments separated by a delimiter (which is now the space that we just introduced), specified by the `-d` option followed by the delimiter in quotes. We can limit the output now to one or some of the fragments with -f, followed by a number or a range:
+- This will replace all tabs with a space. The last adjustment is to get rid of the energies. In YASARA, we are only interested in the mutations. We can use `cut` to divide a string into fragments separated by a delimiter (which is now the space that we just introduced), specified by the `-d` option followed by the delimiter in quotes. We can limit the output now to one or some of the fragments with -f, followed by a number or a range:
 
 ```bash
 $ cat muts_energ2.tab | tr '\t' ' ' | cut -d ' ' -f1-3 > mutations.tab
@@ -409,13 +409,12 @@ $ which bash
 ```bash
 $ #!/usr/bin/env bash
 
-cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1       \2      \3/' | sort -n -k2 > muts_energ2.tab
+cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1\t\2\t\3/' | sort -n -k2 > muts_energ2.tab
 cat muts_energ2.tab | tr '\t' ' ' | cut -d ' ' -f1-3 > mutations.tab
 ```
 
 </details>
 
-- Now beware of one thing: copy pasting works quite well in the terminal, with the exception of tabs. If you go with the cursor to the part of the command where we substitute with tabs, you will notice that they were replaced by multiple spaces. Delete the spaces and add the tab again (in nano you don't need CTRL+V, you can simply press <TAB>)
 - Save the file. Now we need to do one last thing to make this script file ready: we need to make it executable. For that we use the `chmod` command, which can give the script file the corresponding permission with the `-x` option.
 
 ```bash
@@ -465,7 +464,7 @@ $ find . -name 'yasara.app'
 ./Software/YASARA.app/Contents/MacOS/yasara.app
 ```
 
-- Create a shortcut to the yasara application in a special file called ".bashrc". This file is always in `~`, but it might not exist on your system, in which case you will create it. It is a hidden file, defined by the preceeding `.`. Note this is a different dot than the one that defines the current directory, so a hidden file in the current directory could be `./.hidden_file`. The bashrc contains settings for the command line, and you can add lines to the file that will be executed every time you open the terminal.  Caution: obviously, you will need to change the path in the command below, with the correct path to yasara, as the find command above told you. Don't forget to replace the `.` with `~`. On a new system, the bashrc might not be automatically sourced, check the file that definitely auto-sources, `~/.bash_profile`. You may have to add a specific instructions to source bashrc in here:
+- Create a shortcut to the yasara application in a special file called `.bashrc`. This file is always in `~`, but it might not exist on your system, in which case you will create it. It is a hidden file, defined by the preceeding `.`. Note this is a different dot than the one that defines the current directory, so a hidden file in the current directory could be `./.hidden_file`. The bashrc contains settings for the command line, and you can add lines to the file that will be executed every time you open the terminal.  Caution: obviously, you will need to change the path in the command below, with the correct path to yasara, as the find command above told you. Don't forget to replace the `.` with `~`. On a new system, the bashrc might not be automatically sourced, check the file that definitely auto-sources, `~/.bash_profile`. You may have to add a specific instructions to source bashrc in here:
 ```
 $ cat ~/.bash_profile
 #! /bin/bash
@@ -504,7 +503,7 @@ $ source ~/.bashrc
 $ yasara
 ```
 
-- This will open up YASARA. While it is open, go back to the terminal. And try typing something. You will notice that there is no $ and whatever you type has no effect. That is because the terminal is still busy with the current command, which was yasara. To prevent this effect, you can use the "&" sign, to start a process in the background. Close the YASARA window and go to the terminal. You will see the "$" sign again.
+- This will open up YASARA. While it is open, go back to the terminal. And try typing something. You will notice that there is no $ and whatever you type has no effect. That is because the terminal is still busy with the current command, which was yasara. To prevent this effect, you can use the `&` sign, to start a process in the background. Close the YASARA window and go to the terminal. You will see the `$` sign again.
 
 ```bash
 $ yasara &
@@ -527,7 +526,7 @@ $ cd pdbs
 ```
 
 - On the other hand, you now have access to all the commands of YASARA. You can find out about the commands in several ways: you can go to the user manual by clicking in the menu help>show user manual, or with Help>Search User Manual to search for a keyword/topic, or with help> show command docs if you know the command and want to know details. There are also very helpful and interactive movies that you can watch, which are a great way of learning the basics.
-- Now click on the search option and type "pdb". Searching takes a while and then a browser window with results opens. If you click on the entry "PDB files" you will see a list of associated commands. Click on LoadPDB, and you will see the help file for this command. At the top, you see the various ways of accessing this command. At the top (the entry "Format"), you see the syntax for the command in the command line. Below, you see how you can access the command from the menu. The various options of the command, called arguments in case of specifying them on the command line, are explained in the section below, and if you scroll to the bottom of the help file you see various examples.
+- Now click on the search option and type `pdb`. Searching takes a while and then a browser window with results opens. If you click on the entry `PDB files` you will see a list of associated commands. Click on LoadPDB, and you will see the help file for this command. At the top, you see the various ways of accessing this command. At the top (the entry `Format`), you see the syntax for the command in the command line. Below, you see how you can access the command from the menu. The various options of the command, called arguments in case of specifying them on the command line, are explained in the section below, and if you scroll to the bottom of the help file you see various examples.
 - Go back to YASARA and use the command from the menu: File>Load>PDB File. Since we went to the pdbs folder earlier, you should now see the 4RG3.pdb file there. Double click to open it. You now see the protein in its most realistic representation: all atoms are shown as balls, which roughly correspond to the size they actually occupy. However, because there are so many atoms, we prefer to not actually see all of them and are used to other representations. Using the F keys, you have a quick access to change the style. Click All the F keys from F1 to F8 to see how the style changes from showing all atoms in various ways to showing the secondary structure in different styles. Now press first F2 and then F6, and try to zoom in on the center of the protein by keeping the right mouse key pressed and moving the mouse up and down. Rotate the scene with the left mouse key, and move the protein with the middle mouse key pressed. In this way, try to zoom in on the flavin cofactor of the protein. Try to find the typical three ringed isoalloxazine ring and zoom in on it at the center of the screen. Leftclick on one of the atoms and see how it is now marked. Now rightclick on the marked atom and click Color>Residue. Chose Yellow and click OK.
 - Now open YASARA's command line with space. You will see a lot of text now, that wasn't there before. If you click space again, the command line becomes bigger. You can scroll up to the top, of the command line, where you will first see some messages that YASARA prints on start up, and then the first commands you typed: `pwd` and `cd`. Below that, you also see all the commands that correspond to your mouse clicking on the menu: `LoadPDB`, `Style`, and at lastly `ColorRes`. This is a very useful feature of YASARA: whatever you click on the menu, will appear in the command line afterwards. That is a simple way of learning the commands, and the next time you might just type the command instead of searching it in the menu.
 
@@ -538,9 +537,9 @@ $ cd pdbs
 ### Basic YASARA commands and swapping a residue
 
 If we want to have a look at how the mutations affect the protein structure, we can simulate the mutant structure *in silico* using YASARA. One rule in computational chemistry is, that there is *always* a more precise way of modeling. That means, that there are many methods to simulate reality, and as they differ in complexity they differ in predictive accuracy.
-- A very simple way of creating the mutant, is by exchanging the amino acid manually. In YASARA, a single command is sufficient to achieve this, it's called `SwapRes`. As before with the Color command, the second part is "Res" and this is called the final selection unit. Many commands end in this way, and the unit can be All (apply to everything), Obj (apply to an object), Mol (Molecule), Res, or Atom. An Object is usually an entire protein, and this is divided into molecules, which can be different protein subunits, or ligands bound to the protein. The residues are amino acids, waters, or ligands. The exact selection usually follows right after the command. If you check the history of the Color command, you see that the command you executed via the right click menu was ColorRes Atom 4095, which translates to: color the residue which contains atom number 4095.
-- All atoms in YASARA are numbered consecutively starting from 1, and you can see the number of a left mouse click marked atom in the left "HUD" (head up display), which is the text in the top left menu under the title ATOM PROPERTIES. Besides atom number, also the atom name, residue number and name and object number and name are given, plus some more information. The top right hud shows the "soup", i.e. all the atoms, and their organization into objects, molecules, and residues. If you click on 4RG3 in the object list, it will expand the sublist of molecules, and if you click on the first molecule you can see all the residues. The residues also appear in a separate menu, which is at the bottom of the window and only appears if you move the mouse there. Scroll to the right until you find the residue "NAP", which is the NADP (residue names can only have three letters). If you left click on it, it will be marked. If you click on it while holding CTRL, you will zoom in.
-- If you do this and check the command line, you'll see the corresponding command, ZoomAtom 4119, which a random atom of the cofactor. If you want to zoom to see the entire residue, you have to change the final selection to "Res", and afterwards provide the name of the residue:
+- A very simple way of creating the mutant, is by exchanging the amino acid manually. In YASARA, a single command is sufficient to achieve this, it's called `SwapRes`. As before with the Color command, the second part is `Res` and this is called the final selection unit. Many commands end in this way, and the unit can be All (apply to everything), Obj (apply to an object), Mol (Molecule), Res, or Atom. An Object is usually an entire protein, and this is divided into molecules, which can be different protein subunits, or ligands bound to the protein. The residues are amino acids, waters, or ligands. The exact selection usually follows right after the command. If you check the history of the Color command, you see that the command you executed via the right click menu was ColorRes Atom 4095, which translates to: color the residue which contains atom number 4095.
+- All atoms in YASARA are numbered consecutively starting from 1, and you can see the number of a left mouse click marked atom in the left `HUD` (head up display), which is the text in the top left menu under the title ATOM PROPERTIES. Besides atom number, also the atom name, residue number and name and object number and name are given, plus some more information. The top right hud shows the `soup`, i.e. all the atoms, and their organization into objects, molecules, and residues. If you click on 4RG3 in the object list, it will expand the sublist of molecules, and if you click on the first molecule you can see all the residues. The residues also appear in a separate menu, which is at the bottom of the window and only appears if you move the mouse there. Scroll to the right until you find the residue `NAP`, which is the NADP (residue names can only have three letters). If you left click on it, it will be marked. If you click on it while holding CTRL, you will zoom in.
+- If you do this and check the command line, you'll see the corresponding command, ZoomAtom 4119, which a random atom of the cofactor. If you want to zoom to see the entire residue, you have to change the final selection to `Res`, and afterwards provide the name of the residue:
 
 ```yasara
 > ZoomRes NAP
@@ -571,7 +570,7 @@ If we want to have a look at how the mutations affect the protein structure, we 
 > ShowRes protein Res 77 79
 ```
 
-- Note that you have to insert the keyword Res again, if you omit it, it means "and", and you would show all protein residues and residues 77 and 79:
+- Note that you have to insert the keyword `Res` again, if you omit it, it means `and`, and you would show all protein residues and residues 77 and 79:
 
 ```yasara
 > ShowRes protein 77 79
@@ -598,7 +597,7 @@ If we want to have a look at how the mutations affect the protein structure, we 
 > ShowSecStrAll
 ```
 
-- You might notice that our threonine seems to be quite at the outside of the protein. If we want to know if it is definitely at the very surface of the protein, we can use the `ShowSurf` command to visualize it. Check out `Help ShowSurf` to see all the info's on this command, and also watch the help movie dealing with surfaces. Importantly, we need to select a surface type, in this case we go for the type "molecular":
+- You might notice that our threonine seems to be quite at the outside of the protein. If we want to know if it is definitely at the very surface of the protein, we can use the `ShowSurf` command to visualize it. Check out `Help ShowSurf` to see all the info's on this command, and also watch the help movie dealing with surfaces. Importantly, we need to select a surface type, in this case we go for the type `molecular`:
 
 ```yasara
 > ShowSurfAll molecular
@@ -678,7 +677,7 @@ Simply swappping the residue is not a very good simulation of reality. The SwapR
 > HideSecStrAll
 ```
 
-- Now you see the original residue in pink, overlaid with the mutated residue. You can see how the mutated residue quite closely matches the original crystal structure orientation. In the top right HUD, you can click on "Yes" in the column "Vis" (for visible) to switch on and off object 2, to better compare.
+- Now you see the original residue in pink, overlaid with the mutated residue. You can see how the mutated residue quite closely matches the original crystal structure orientation. In the top right HUD, you can click on `Yes` in the column `Vis` (for visible) to switch on and off object 2, to better compare.
 - You also might have noticed that there is a new Object 3, called SimCELL, and you can see that it is a box surrounding the entire protein if you zoom out a bit. This simulation cell was created by YASARA because it strives to confine the space that it simulates. By creating a box around the protein, you define all simulations to the inside of that box, and we are going to need that for the next step. Now YASARA created the cell during the optimization, but you can also add it manually. First delete the existing one:
 
 ```yasara
@@ -859,13 +858,13 @@ cat muts_energ2.tab | tr '\t' ' ' | cut -d ' ' -f1-3 > mutations.tab
 ```
 
 - Th is will of course only work, if we have a file called muts_energ.tab, and we're facing the first question about generality. Do we want to let the script only work when there is a file with that name and fail in other cases? We have several ways of at least improving this a little bit. Firstly we could define a variable at the beginning of the script that contains the file name. Variable definitions at the script start are very common, because it is difficult to go through the entire code later to find all the filenames/strings/numbers that the code depends on in order for it to work. If we define those  dependencies at the beginning, they can be easily changed when a new task requires this.
-- In bash, variables are defined through the variable name, followed by equals sign "=", followed by the value, and without spaces. Try to give meaningful, but short names to variables.
+- In bash, variables are defined through the variable name, followed by equals sign `=`, followed by the value, and without spaces. Try to give meaningful, but short names to variables.
 
 ```bash
 mut_file=muts_energ.tab
 ```
 
-- You can call the content of the variable with the dollar "$" sign:
+- You can call the content of the variable with the dollar `$` sign:
 
 ```bash
 $ echo $mut_file
@@ -907,7 +906,7 @@ b
 c
 ```
 
-- Usually you define a variable, right after for (char in this case) that will then adopt each value of the list that you provide, starting from the first and cycling through until the last. For will execute all commands that are enclosed by `; do` and `; done` through. The semicolon ";" is equivalent to a new line. Thus the above command is the same as typing:
+- Usually you define a variable, right after for (char in this case) that will then adopt each value of the list that you provide, starting from the first and cycling through until the last. For will execute all commands that are enclosed by `; do` and `; done` through. The semicolon `;` is equivalent to a new line. Thus the above command is the same as typing:
 
 ```bash
 $ for char in a b c
@@ -931,7 +930,7 @@ $ if [ "a" == "a" ]; then echo yes; fi
 yes
 ```
 
-- Here instead of the `do` `done` enclosure, we have to use `then` `fi` ("fi" is "if" backwards). The double equals sign "==" is reserved for text, if we want to compare numbers we have to switch to "-eq" (equal), and "-gt" (greater than) or "-lt" (less than):
+- Here instead of the `do` `done` enclosure, we have to use `then` `fi` (`fi` is `if` backwards). The double equals sign `==` is reserved for text, if we want to compare numbers we have to switch to `-eq` (equal), and `-gt` (greater than) or `-lt` (less than):
 
 ```bash
 $ if [ 2 -gt 1 ]; then echo yes; fi
@@ -1043,7 +1042,7 @@ done < mutations.tab
 ```
 
 </details>
-<br>
+
 - Of course now instead of printing the mutations to the screen, we want to create them in YASARA. Instead of the `echo`, we want to invoke `yasara`, which then performs the mutation for us. So now it's time to work on our YASARA script.
 - One essential part is already there. Above, we already created a script for the wild type that performs the structure preparation, and the cell neutralization and energy minimization experiments. We only need to add the mutation part, and the commands for that were already discussed above. The only question is, how we can let YASARA know which exactly is the mutation it has to perform. For that, we have two options: either we can provide this information from the command line when we invoke `yasara`, or we can let YASARA read our tab file. Since we need to provide some command line arguments anyway, we will opt for option one in this case.
 - A command line argument for `yasara` is a way to define variables within YASARA. Within YASARA, variables have a different syntax than in bash. While in bash we called the variable with the dollar sign: `$variable`, in YASARA we call them by enclosing them in round brackets: `(variable)`. On the command line, the variables are simply provided after the file name, one after the other with `=`, enclosed in quotes. This only works, however, if we open a script file with YASARA.
@@ -1069,7 +1068,7 @@ Macro>print 1
 1
 ```
 
-- Now let's include some variables in our minimization script to perform the mutation. A common (although not required) name for the file that we want to load is "MacroTarget". The only other two pieces of information we need is the residue number and the mutated amino acid, I will call those variables `(residue)` and `(mutation)`. At the end of the script, I will also perform the overlay with the wild type structure and include the commands that we used in the visualization section, before exiting YASARA. Try to write the script yourself first, before you compare with my solution. Simply collect all the commands that we used above, and replace specific residue numbers with `(residue)`, and specific mutation amino acids with (mutation).
+- Now let's include some variables in our minimization script to perform the mutation. A common (although not required) name for the file that we want to load is `MacroTarget`. The only other two pieces of information we need is the residue number and the mutated amino acid, I will call those variables `(residue)` and `(mutation)`. At the end of the script, I will also perform the overlay with the wild type structure and include the commands that we used in the visualization section, before exiting YASARA. Try to write the script yourself first, before you compare with my solution. Simply collect all the commands that we used above, and replace specific residue numbers with `(residue)`, and specific mutation amino acids with (mutation).
 
 ```yasara
 # Script to mutate a residue, energy minimize the mutant, compare with WT and save a .png & .sce

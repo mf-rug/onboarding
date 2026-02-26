@@ -492,7 +492,7 @@ All RUG employees have access to **unlimited backup space** on RDMS (Research Da
 
 **Connecting via Finder:** Use `Cmd + K` (Go → Connect to Server) and enter `https://webdav.data.rug.nl`. This gives a convenient overview of your files, but is very slow — don't attempt to copy large amounts of data or calculate folder sizes through Finder.
 
-<img src="rdms.png" alt="Finder Connect to Server dialog showing RDMS WebDAV connection" width="450"/><br>
+<img src="../images/rdms.png" alt="Finder Connect to Server dialog showing RDMS WebDAV connection" width="450"/><br>
 
 
 **Connecting via command line:** The RDMS wiki recommends iCommands, but those can be tricky to get working on macOS. A reliable alternative is [Cyberduck](https://cyberduck.io/), specifically its command-line interface `duck`:
