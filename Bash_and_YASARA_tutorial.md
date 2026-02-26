@@ -4,25 +4,25 @@
 
 This exercise is meant to give an introduction to basic computational methods for mutagenesis and protein engineering. It will cover diverse methods including command line (bash) input and scripting, molecular simulations and molecular visualization. It requires a bash command line (the standard terminal for most linux systems and MacOS, but also available for Windows 10) and YASARA. In this manual, the command line is depicted as follow:
 
-Bash input is indicated with a leading “$” sign in grey background:
+Bash input is indicated with a leading `$` sign in grey background:
 
 ```bash
  $ input
 ```
 
-Bash output is the same, but without the “$” sign:
+Bash output is the same, but without the `$` sign:
 
 ```bash
  output
 ```
 
-YASARA command line input is indicated with a leading “>” sign:
+YASARA command line input is indicated with a leading `>` sign:
 
 ```yasara
 > input
 ```
 
-YASARA output is the same, but without the “>” sign:
+YASARA output is the same, but without the `>` sign:
 
 ```yasara
 output
@@ -34,7 +34,7 @@ output
 
 ### Create folders and learn basic commands
 
-- Fire up a terminal (Mac: press cmd+space and type “terminal”, linux: press Ctrl+Alt+T). Although, better use the much better [iTerm2](https://iterm2.com/) terminal.
+- Fire up a terminal (Mac: press cmd+space and type `terminal`, linux: press Ctrl+Alt+T). Although, better use the much better [iTerm2](https://iterm2.com/) terminal.
 - The terminal usually opens in the home directory. To see your current directory use the *print working directory* command `pwd`:
 
 ```bash
@@ -1043,7 +1043,7 @@ done < mutations.tab
 ```
 
 </details>
-<br>
+
 - Of course now instead of printing the mutations to the screen, we want to create them in YASARA. Instead of the `echo`, we want to invoke `yasara`, which then performs the mutation for us. So now it's time to work on our YASARA script.
 - One essential part is already there. Above, we already created a script for the wild type that performs the structure preparation, and the cell neutralization and energy minimization experiments. We only need to add the mutation part, and the commands for that were already discussed above. The only question is, how we can let YASARA know which exactly is the mutation it has to perform. For that, we have two options: either we can provide this information from the command line when we invoke `yasara`, or we can let YASARA read our tab file. Since we need to provide some command line arguments anyway, we will opt for option one in this case.
 - A command line argument for `yasara` is a way to define variables within YASARA. Within YASARA, variables have a different syntax than in bash. While in bash we called the variable with the dollar sign: `$variable`, in YASARA we call them by enclosing them in round brackets: `(variable)`. On the command line, the variables are simply provided after the file name, one after the other with `=`, enclosed in quotes. This only works, however, if we open a script file with YASARA.
