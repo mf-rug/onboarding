@@ -11,6 +11,7 @@ If you have never used the command line before, there are some useful tutorials 
 - [Shell novices:](https://swcarpentry.github.io/shell-novice/) A beginner-friendly introduction to the command line.
 - [Habrok tutorial:](https://wiki.hpc.rug.nl/habrok/additional_information/course_material/exercises_solutions) Exercises specific for Habrok cluster
 
+I wrote down the most important commands in [Command Line Basics](command_line_basics.md).
 
 ## Installing Boltz (and Boltzgen)
 
@@ -163,7 +164,7 @@ boltz predict [filename].yaml \
 --accelerator gpu \
 --devices 1
 ```
-Save changes with `Cmd + O` and close with `Cmd + X`.
+Save changes with `Ctrl + O` and close with `Ctrl + X`.
 
 ### Step 4 - Submit job
 
@@ -187,19 +188,8 @@ If your job disappears from the list, it usually means it has finished (or faile
 
 After the job finishes you can open the results/ folder to see the predicted structures. If the folder is empty, check the logs/ folder for error messages
 
-To download the results to your local computer, use rsync from a terminal on your own machine (not while logged into the cluster):
-
-```bash
-rsync -r [p-number]@[login-node]:/path/to/results /local/destination
-```
-
-Example:
-
-```bash
-rsync -r p324178@login1.hb.hpc.rug.nl:/scratch/p324178/Boltz/results .
-```
-
-This will copy the entire results folder from the cluster to your local computer. You can then check your predicted structures :)
+To download the results to your local computer, use the instructions in [Command Line Basics](command_line_basics.md).
+You can then check your predicted structures :)
 
 
 
