@@ -201,7 +201,7 @@ $ nano muts_energ.tab
 
 - You should see something like this:
 
-![nano screenshot](image1.png)
+![nano screenshot](images/image1.png)
 
 - You can simply start typing text now. Write the following mutations and numbers separated by a tab:
 
