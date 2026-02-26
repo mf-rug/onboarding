@@ -73,20 +73,21 @@ $ pwd
 /Users/max/university/exercise
 ```
 
-- Did you type `pwd` every time? Note that you can use the arrow keys up and down to access your command history. This saves a lot of time and you can also modify the old command.
-- Learn how to use tab completion. When you read <tab>, don’t type this, but press the TAB key on your keyboard
+- Did you type `pwd` every time? You can use the arrow keys up and down to access your command history. This saves a lot of time and you can also modify the old command.
+
+- Learn how to use TAB completion. When you read `<tab>`, don’t type this, but press the `TAB` key on your keyboard.
 
 ```bash
 $ cd uni<tab>
 ```
 
-The command line should now fill in the rest of the foldername (works also with filenames)
+- The command line should now fill in the rest of the foldername (works also with filenames)
 
 ```bash
 $ cd university/
 ```
 
-If you press TAB again it will also fill in the name of the folder inside the folder (at least if there is only one file/folder, otherwise you might have to type the first few letters of the folder and then press TAB.
+- If you press TAB again it will also fill in the name of the folder inside the folder (at least if there is only one file/folder, otherwise you might have to type the first few letters of the folder and then press TAB.
 
 ```bash
 $ cd university/<tab>
@@ -187,6 +188,7 @@ Congrats! You’ve mastered the most important bash commands.
 
 - Let's go through some examples of mutations. You will later have to apply the procedure to the real mutations that you are doing in the lab.
 - First we create an example file with some mutations. Go to the terminal and use echo and `>>` redirect to create a file with a mutation, then a tab, and then a number. To enter a literal tab character in the terminal you need to know two things: firstly, because pressing tab is used in bash for tab completion, you need to first press CTRL+V and then press the tab key. Secondly, in order to print the tab, you need to enclose your string in quotes.
+- **Note:** The width of the `TAB` character can vary depending on your editor or viewer. In some cases, it may appear wider or narrower than spaces.
 
 ```bash
 $ cd ~/university/exercise/
