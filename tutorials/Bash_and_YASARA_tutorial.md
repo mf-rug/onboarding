@@ -188,7 +188,6 @@ Congrats! You’ve mastered the most important bash commands.
 
 - Let's go through some examples of mutations. You will later have to apply the procedure to the real mutations that you are doing in the lab.
 - First we create an example file with some mutations. Go to the terminal and use echo and `>>` redirect to create a file with a mutation, then a tab, and then a number. To enter a literal tab character in the terminal you need to know two things: firstly, because pressing tab is used in bash for tab completion, you need to first press CTRL+V and then press the tab key. Secondly, in order to print the tab, you need to enclose your string in quotes.
-- **Note:** The width of the `TAB` character can vary depending on your editor or viewer. In some cases, it may appear wider or narrower than spaces.
 
 ```bash
 $ cd ~/university/exercise/
@@ -311,9 +310,6 @@ $ echo F248A | sed -E 's/^([A-Z])/\1	/'
 ```
 </details>
 
-- Now beware of one thing: copy pasting works quite well in the terminal, with the exception of tabs. If you go with the cursor to the part of the command where we substitute with tabs, you will notice that they were replaced by multiple spaces. Delete the spaces and add the tab again (remember to use `CTRL + V`).
-
-
 ```bash
 F	248A
 ```
@@ -335,12 +331,13 @@ $ cat muts_energ.tab | sed -E 's/^([A-Z])/\1	/'
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2    \3/'
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]{1,3})([A-Z])/\1    \2    \3/'
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1    \2    \3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1\t\2\t\3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]{1,3})([A-Z])/\1\t\2\t\3/'
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1\t\2\t\3/'
 ```
-
 </details>
+
+- The tab is written as `\t` here. You can keep this or replace it with a `TAB` (remember to use `CTRL + V`).
 
 - So… Why did we do all this again? Because now we can sort the file by residue number:
 
@@ -348,7 +345,7 @@ $ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9][0-9]?[0-9]?)([A-Z])/\1    \2    
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2    \3/' | sort -n -k2
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1\t\2\t\3/' | sort -n -k2
 ```
 
 </details>
@@ -366,7 +363,7 @@ F	248	A	1.50
 <summary>Solution</summary>
 
 ```bash
-$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2    \3/' | sort -n -k2 > muts_energ2.tab
+$ cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1\t\2\t\3/' | sort -n -k2 > muts_energ2.tab
 ```
 
 </details>
@@ -380,7 +377,7 @@ Congrats, you mastered regular expressions! You have now a powerful tool at hand
 $ cat muts_energ2.tab | tr '\t' ' '
 ```
 
-- This will replace all tabs with a space. Instead of \t we can also write a literal tab, both works. The last adjustment is to get rid of the energies. In YASARA, we are only interested in the mutations. We can use `cut` to divide a string into fragments separated by a delimiter (which is now the space that we just introduced), specified by the `-d` option followed by the delimiter in quotes. We can limit the output now to one or some of the fragments with -f, followed by a number or a range:
+- This will replace all tabs with a space. The last adjustment is to get rid of the energies. In YASARA, we are only interested in the mutations. We can use `cut` to divide a string into fragments separated by a delimiter (which is now the space that we just introduced), specified by the `-d` option followed by the delimiter in quotes. We can limit the output now to one or some of the fragments with -f, followed by a number or a range:
 
 ```bash
 $ cat muts_energ2.tab | tr '\t' ' ' | cut -d ' ' -f1-3 > mutations.tab
@@ -412,7 +409,7 @@ $ which bash
 ```bash
 $ #!/usr/bin/env bash
 
-cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1    \2    \3/' | sort -n -k2 > muts_energ2.tab
+cat muts_energ.tab | sed -E 's/^([A-Z])([0-9]+)([A-Z])/\1\t\2\t\3/' | sort -n -k2 > muts_energ2.tab
 cat muts_energ2.tab | tr '\t' ' ' | cut -d ' ' -f1-3 > mutations.tab
 ```
 
