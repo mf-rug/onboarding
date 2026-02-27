@@ -760,7 +760,10 @@ Experiment Minimization
   Experiment On
 Wait ExpEnd
 ```
-
+- You can run the script in YASARA using:
+```bash
+PlayMacro minimization.mcr 
+```
 - It will take a while again; you will notice that it is finished when there is no message is shown anymore. To speed up the process, you can hide the secondary structure. YASARA will then not use resources to predict the secondary structure at each time step of the simulation.
 - Now we can save also this structure:
 
