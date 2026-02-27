@@ -760,10 +760,6 @@ Experiment Minimization
   Experiment On
 Wait ExpEnd
 ```
-- You can run the script in YASARA using:
-```bash
-PlayMacro minimization.mcr 
-```
 - It will take a while again; you will notice that it is finished when there is no message is shown anymore. To speed up the process, you can hide the secondary structure. YASARA will then not use resources to predict the secondary structure at each time step of the simulation.
 - Now we can save also this structure:
 
@@ -1270,3 +1266,7 @@ Exit
 
 
 Congrats! You now know everything to become a computational biochemist. Try to apply this procedure to the mutations you are doing in the lab, and maybe you can get some clues about why the mutations are stabilizing (or not).
+
+## Python for YASARA
+
+- There is a repository that allows you to execute YASARA commands directly from VSCode or Cursor IDE. Using this tool, you can write Python code with the yasara library in your  code editor and run individual lines or  scripts inside YASARA by selecting them in the IDE and pressing a keyboard shortcut. Installation instructions and usage details are available on the [Github page](https://github.com/mf-rug/PythonFromIDE_for_YASARA).
