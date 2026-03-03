@@ -517,8 +517,8 @@ brew install duck
 To sync a local folder to RDMS:
 
 ```bash
-duck --sync davs://webdav.data.rug.nl/[name]@rug.nl/target/folder/ \
-     /local/folder/ \
+duck --sync davs://webdav.data.rug.nl/[name]@rug.nl/[target_folder] \
+     /local/folder \
      --existing upload \
      -u [name]@rug.nl -y | tee -a ~/.backup.log
 ```
