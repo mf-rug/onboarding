@@ -504,8 +504,10 @@ brew install duck
 To sync a local folder to RDMS:
 
 ```bash
-duck --sync davs://webdav.data.rug.nl/you@rug.nl/target/folder/ /local/folder/ \
-    --existing upload -u you@rug.nl -y | tee -a ~/.backup.log
+duck --sync davs://webdav.data.rug.nl/[name]@rug.nl/[target_folder] \
+     /local/folder \
+     --existing upload \
+     -u [name]@rug.nl -y | tee -a ~/.backup.log
 ```
 
 This will compare local and remote files, upload anything new or changed, and log progress to `~/.backup.log` (while also printing to the screen — that's what `tee` does). On first run, `duck` will ask for your password and can save it to the macOS keychain.
