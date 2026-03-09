@@ -494,6 +494,7 @@ All RUG employees have access to **unlimited backup space** on RDMS (Research Da
 
 <img src="../images/rdms.png" alt="Finder Connect to Server dialog showing RDMS WebDAV connection" width="450"/><br>
 
+**Connecting via browser:** You can go to `https://webdav.data.rug.nl/` in the browser and log in with your rug mail address and password. Here you can also get an overview of your files.
 
 **Connecting via command line:** The RDMS wiki recommends iCommands, but those can be tricky to get working on macOS. A reliable alternative is [Cyberduck](https://cyberduck.io/), specifically its command-line interface `duck`:
 
@@ -504,8 +505,10 @@ brew install duck
 To sync a local folder to RDMS:
 
 ```bash
-duck --sync davs://webdav.data.rug.nl/you@rug.nl/target/folder/ /local/folder/ \
-    --existing upload -u you@rug.nl -y | tee -a ~/.backup.log
+duck --sync davs://webdav.data.rug.nl/[name]@rug.nl/target/folder/ \
+     /local/folder/ \
+     --existing upload \
+     -u [name]@rug.nl -y | tee -a ~/.backup.log
 ```
 
 This will compare local and remote files, upload anything new or changed, and log progress to `~/.backup.log` (while also printing to the screen — that's what `tee` does). On first run, `duck` will ask for your password and can save it to the macOS keychain.
