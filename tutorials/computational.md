@@ -147,7 +147,19 @@ Google "customize bash prompt" or "customize zsh prompt" to learn more about the
 
 Tab completion is one of the most useful tricks for efficient terminal navigation: pressing `Tab` auto-completes file, folder, and program names. For example, type `na` and press `Tab` to complete it to `nano` — unless another program also starts with "na", in which case the shell will either complete up to the common prefix, show all matches, or cycle through them.
 
-**Bash** tab completion config (add to `~/.bashrc`):
+By default, Bash only completes file and folder names. To enable smarter completions — like completing `git che<Tab>` to `git checkout` or `ssh <Tab>` to your known hosts — install the `bash-completion` package:
+
+```bash
+brew install bash-completion@2
+```
+
+Then add this to your `~/.bashrc`:
+
+```bash
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+```
+
+**Bash** tab completion config (also add to `~/.bashrc`):
 
 ```bash
 # cycle through matches on ambiguous tab completion
