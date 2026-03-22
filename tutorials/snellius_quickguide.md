@@ -1,8 +1,23 @@
 # Snellius Cluster Quick Reference
 
-Snellius is operated by SURF and accessed via `int4.local.snellius.surf.nl`.
+Snellius is operated by SURF and accessed via `snellius.surf.nl`.
 
 Official docs: <https://edu.nl/cq7yn>
+
+## Getting Access & Connecting
+
+1. **Get added as a user.** A compute grant holder (e.g. your PI) needs to add you to their project. You cannot request access on your own.
+2. **Create an SSH key pair.** Run this in your terminal to generate a key:
+   ```bash
+   ssh-keygen -t ed25519
+   ```
+   Press Enter to accept the default location (`~/.ssh/id_ed25519`) and optionally set a passphrase. This creates two files: a private key (keep this secret) and a public key (`~/.ssh/id_ed25519.pub`) which you'll upload in the next step. More details [here](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/62226987/Creating+and+using+an+SSH+key+pair+on+the+Terminal).
+3. **Upload your public key** to the SURF User Portal: <https://portal.cua.surf.nl/user/keys>
+4. **Connect** via SSH:
+
+```bash
+ssh yourusername@snellius.surf.nl
+```
 
 ## Filesystems
 
