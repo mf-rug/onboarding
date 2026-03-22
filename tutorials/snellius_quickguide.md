@@ -6,9 +6,9 @@ Official docs: <https://edu.nl/cq7yn>
 
 ## Filesystems
 
-| Path | Purpose | Quota (mfurst) | Notes |
+| Path | Purpose | Quota (urname) | Notes |
 |---|---|---|---|
-| `/gpfs/home5/mfurst` (`$HOME`) | Home directory | 200 GiB | Backed up, small quota |
+| `/gpfs/home5/urname` (`$HOME`) | Home directory | 200 GiB | Backed up, small quota |
 | `/gpfs/scratch1/` | Scratch / temp storage | 8 TiB | **Not backed up**, auto-purged |
 | `/projects/prjs1925` | Shared project space | Shared by group | Persistent, for project data |
 
