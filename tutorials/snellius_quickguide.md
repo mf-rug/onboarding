@@ -19,6 +19,20 @@ Official docs: <https://edu.nl/cq7yn>
 ssh yourusername@snellius.surf.nl
 ```
 
+5. **Set up a shortcut** so you can just type `ssh ss` instead of the full address. Add this to `~/.ssh/config` (create the file if it doesn't exist):
+
+```
+Host ss
+    HostName snellius.surf.nl
+    User yourusername
+```
+
+Then simply connect with:
+
+```bash
+ssh ss
+```
+
 ## Filesystems
 
 | Path | Purpose | Quota (urname) | Notes |
