@@ -46,7 +46,7 @@ module load ColabFold
 inputfile='/path/to/input/fasta.fa'
 outdir='/path/to/output/directory'
 
-colabfold_search "$inputfile" $COLABFOLD_DATA_DIR "$outdir" --db-load-mode 0 --threads 20
+colabfold_search "$inputfile" $COLABFOLD_DATA_DIR "$outdir" --db-load-mode 0 --threads 10
 ```
 Save these commands in a text file (For example called `jobscript-msa`). Then submit this jobscript to the cluster using:
 ```
