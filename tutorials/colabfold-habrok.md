@@ -1,4 +1,4 @@
-# using ColabFold on the Habrok cluster
+# Using ColabFold on the Habrok cluster
 
 ## Using Habrok in the command line
 
