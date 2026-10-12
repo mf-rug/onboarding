@@ -375,226 +375,32 @@ You can add it to your Favourite Servers for quick access in the future.
 
 ### RDMS (University Backup Storage)
 
-All RUG employees have access to **unlimited backup space** on RDMS (Research Data Management Service). See the [RDMS documentation](https://wiki.hpc.rug.nl/rdms/start) for full details.
+Every RUG employee gets personal storage on RDMS (Research Data Management System) — 1 TB per person at the time of writing — and groups can get **team drives** (ours is `fuerstlab`). See the [RDMS documentation](https://wiki.hpc.rug.nl/rdms/start). Use it as the off-site copy of your work: when your Mac dies, or you `rm -rf` the wrong folder, this is where yesterday's files are.
 
 **Connecting via Finder:** Use `Cmd + K` (Go → Connect to Server) and enter `https://webdav.data.rug.nl`. This gives a convenient overview of your files, but is very slow — don't attempt to copy large amounts of data or calculate folder sizes through Finder.
 
 <img src="rdms.png" alt="Finder Connect to Server dialog showing RDMS WebDAV connection" width="450"/><br>
 
+**Browsing and one-off transfers:** [Cyberduck](https://cyberduck.io/) (GUI) or [rclone](https://rclone.org) with a WebDAV remote pointing at `https://webdav.data.rug.nl/you@rug.nl`. The wiki's iCommands also work on macOS once you point them at a current certificate bundle: `brew install ca-certificates`, add `"irods_ssl_ca_certificate_file": "/opt/homebrew/etc/ca-certificates/cert.pem"` to `~/.irods/irods_environment.json`, then `iinit`.
 
-**Connecting via command line:** The RDMS wiki recommends iCommands, but those can be tricky to get working on macOS. A reliable alternative is [Cyberduck](https://cyberduck.io/), specifically its command-line interface `duck`:
-
-```bash
-brew install duck
-```
-
-To sync a local folder to RDMS:
+**Automated backup:** use [rdms-backup](https://github.com/mf-rug/rdms-backup), a small tool around rclone and launchd that mirrors `~/Documents` to RDMS. It is upload-only (files you delete locally stay on the server), keeps earlier versions of overwritten files for 90 days, verifies after every run that each file is on the server with the right size, runs at fixed hours and catches up after sleep or downtime, keeps your password in the macOS keychain, and tells you when something is wrong. Setup takes ten minutes:
 
 ```bash
-duck --sync davs://webdav.data.rug.nl/you@rug.nl/target/folder/ /local/folder/ \
-    --existing upload -u you@rug.nl -y | tee -a ~/.backup.log
+brew install rclone jq bash
+git clone https://github.com/mf-rug/rdms-backup ~/Documents/Code/backup && cd ~/Documents/Code/backup
+cp backup.conf.example backup.conf   # fill in your @rug.nl address; adjust folders and hours if you like
+./backup.sh setup                    # stores the password in the keychain, tests the connection
+./backup.sh run --dry-run --full     # what the first run would upload — nothing is written yet
+./backup.sh run --full               # the first run; takes hours, depending on how many files you have
+./backup.sh install                  # from now on it runs by itself; ./backup.sh status shows its health
 ```
 
-This will compare local and remote files, upload anything new or changed, and log progress to `~/.backup.log` (while also printing to the screen — that's what `tee` does). On first run, `duck` will ask for your password and can save it to the macOS keychain.
+Worth knowing before you start:
 
-You should back up regularly (at least weekly), but it's even better to **automate it**.
-
-**Automated backups with launchd:** The following setup runs a backup script automatically. The script splits large directories into manageable chunks, skips folders that haven't been modified recently, handles missing remote directories, and verifies that recent files made it to the server.
-
-Save this as `~/.backup_script.sh`:
-
-```bash
-#!/bin/bash
-
-################################
-############# Info #############
-################################
-
-# Automated backup script using duck (Cyberduck CLI).
-# Syncs a local directory to RDMS via WebDAV.
-# Designed to be run via launchd (see plist below).
-
-################################
-##### Define your settings #####
-################################
-
-# Local base folder to sync
-local_dir=/Users/max/Documents/
-
-# Remote directory (local and remote leaf folder names should match)
-remote_dir=davs://webdav.data.rug.nl/you@rug.nl/Backup/Documents/
-
-# Remote username
-remote_user=you@rug.nl
-
-# Skip folders where all files are older than this many days (0 to disable)
-days_cutoff=10
-
-# Max files per duck sync batch (lower this if connections get interrupted)
-max_files=5000
-
-################################
-#### No changes needed below ###
-################################
-
-log_file=~/.backup.log
-
-# Verify local and remote leaf folder names match
-if [[ "$(basename "$local_dir")" != "$(basename "$remote_dir")" ]]; then
-    echo "ERROR: local and remote folder names don't match. Aborting." | tee -a "$log_file"
-    exit 1
-fi
-
-local_base=$(dirname "$local_dir")
-remote_base=$(dirname "$remote_dir")
-
-########## Functions ###########
-
-# Recursively split directories into chunks of <= max_files
-check_directory() {
-    local dir="$1"
-    local total_file_count
-    total_file_count=$(find "$dir" -type f | wc -l | tr -d ' ')
-
-    if [ "$total_file_count" -le "$max_files" ]; then
-        echo "$dir" >> "$tmp_results"
-    else
-        local has_subdirs=false
-        for subdir in "$dir"/*/; do
-            if [ -d "$subdir" ]; then
-                has_subdirs=true
-                check_directory "$subdir"
-            fi
-        done
-        if [ "$has_subdirs" = false ]; then
-            echo "$dir" >> "$tmp_results"
-        fi
-    fi
-}
-
-# Days since last file modification in a directory
-time_since_last_modification() {
-    local dir="$1"
-    local last_modified_time
-    last_modified_time=$(find "$dir" -type f -exec stat -f '%m' {} + 2>/dev/null | sort -n | tail -1)
-
-    if [ -z "$last_modified_time" ]; then
-        echo 0
-        return
-    fi
-    echo $(( ($(date +%s) - last_modified_time) / 86400 ))
-}
-
-# Sync a single folder, creating missing remote directories if needed
-sync_folder() {
-    local remote_path="$1"
-    local local_path="$2"
-
-    duck --sync "$remote_path" "$local_path" --existing upload -u "$remote_user" -y 2>&1 | tee ~/.sync_output.txt
-
-    if grep -q "Failure to read attributes" ~/.sync_output.txt 2>/dev/null; then
-        echo "Remote folder missing, creating: $remote_path" | tee -a "$log_file"
-        duck --username "$remote_user" --mkdir "$remote_path" 2>/dev/null
-        duck --sync "$remote_path" "$local_path" --existing upload -u "$remote_user" -y 2>&1 | tee ~/.sync_output.txt
-    fi
-
-    {
-        echo '==========================='
-        sed 's/\r/\n/g' ~/.sync_output.txt
-        echo '==========================='
-    } >> "$log_file"
-    rm -f ~/.sync_output.txt
-}
-
-############ Script ############
-
-echo "" | tee -a "$log_file"
-echo '++++++++++++++++++++++++++++++++' | tee -a "$log_file"
-echo "$(date "+%Y-%m-%d %H:%M:%S") — Starting backup" | tee -a "$log_file"
-
-# Build list of folders to sync
-tmp_results=$(mktemp)
-check_directory "$local_dir"
-mapfile -t folders < "$tmp_results"
-rm -f "$tmp_results"
-
-# Check remote is reachable
-echo "Checking connection to RDMS..." | tee -a "$log_file"
-if timeout 15s duck -l "davs://webdav.data.rug.nl/$remote_user/" -u "$remote_user" </dev/null &>/dev/null; then
-    echo "Connected. Processing ${#folders[@]} folders." | tee -a "$log_file"
-
-    for i in "${!folders[@]}"; do
-        path="${folders[$i]}"
-        relative_path="${path#"$local_dir"}"
-        remote_path="$remote_dir/$relative_path"
-
-        last_mod=$(time_since_last_modification "$path")
-        echo "" | tee -a "$log_file"
-        echo "--- Folder $((i+1))/${#folders[@]}: $relative_path" | tee -a "$log_file"
-
-        if [[ "$days_cutoff" -gt 0 && "$last_mod" -ge "$days_cutoff" ]]; then
-            echo "Skipping (last modified ${last_mod}d ago)" | tee -a "$log_file"
-        else
-            echo "Syncing (last modified ${last_mod}d ago)" | tee -a "$log_file"
-            sync_folder "$remote_path" "$path"
-        fi
-    done
-
-    # Fix carriage returns in log
-    sed -i '' 's/\r/\n/g' "$log_file"
-
-    osascript -e 'display notification "Backup completed successfully" with title "RDMS Backup"' 2>/dev/null
-else
-    echo "ERROR: Could not connect to RDMS. Check VPN/network." | tee -a "$log_file"
-    osascript -e 'display notification "Backup failed — check connection" with title "RDMS Backup"' 2>/dev/null
-fi
-
-echo "$(date "+%Y-%m-%d %H:%M:%S") — Backup finished" | tee -a "$log_file"
-echo '++++++++++++++++++++++++++++++++' | tee -a "$log_file"
-```
-
-Make it executable:
-
-```bash
-chmod +x ~/.backup_script.sh
-```
-
-Then create `~/Library/LaunchAgents/com.backup.duck.plist` to run it automatically:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.backup.duck</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/bin/bash</string>
-        <string>-l</string>
-        <string>/Users/max/.backup_script.sh</string>
-    </array>
-    <key>StartInterval</key>
-    <integer>86400</integer>
-    <key>RunAtLoad</key>
-    <true/>
-</dict>
-</plist>
-```
-
-> **Note:** `StartInterval` is in seconds — `86400` = once per day. The `-l` flag runs bash as a login shell so it can access your keychain for the saved password. Update the path to your actual home directory.
-
-Load the agent:
-
-```bash
-launchctl load ~/Library/LaunchAgents/com.backup.duck.plist
-```
-
-Check the log to verify it's working:
-
-```bash
-tail -f ~/.backup.log
-```
+- **File count is what costs time, not gigabytes.** The server accepts about one small file per second per connection (the tool uses 16 in parallel, roughly 5,000 files per hour). Virtualenvs, conda environments, `node_modules`, caches and benchmark working folders with tens of thousands of tiny files are excluded by default (`exclude.txt`); put an empty `.nobackup` file into any other folder you don't want backed up, or keep such things outside `~/Documents`.
+- **Keep an eye on the quota.** RDMS doesn't report it over WebDAV, so check the [web portal](https://research.web.rug.nl/rdmswebapp/) now and then. `./backup.sh orphans` lists what is on the server but no longer on your disk, if you need to free space.
+- **Time Machine cannot back up to RDMS.** WebDAV isn't a supported destination, and a Time Machine sparse bundle (thousands of 8 MB band files, rewritten constantly) would crawl on this server. If you want whole-machine restores including apps and settings, use Time Machine with an external SSD; rdms-backup covers your data off-site.
+- **Restoring** is one command: `./backup.sh rclone copy rugdav:Mac_Backup/Documents/Papers/x.pdf ~/Desktop/`; `./backup.sh versions x.pdf` shows earlier versions of a file. The README has the details.
 
 ## Python Setup
 
