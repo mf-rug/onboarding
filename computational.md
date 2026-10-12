@@ -383,12 +383,12 @@ Every RUG employee gets personal storage on RDMS (Research Data Management Syste
 
 **Browsing and one-off transfers:** [Cyberduck](https://cyberduck.io/) (GUI) or [rclone](https://rclone.org) with a WebDAV remote pointing at `https://webdav.data.rug.nl/you@rug.nl`. The wiki's iCommands also work on macOS once you point them at a current certificate bundle: `brew install ca-certificates`, add `"irods_ssl_ca_certificate_file": "/opt/homebrew/etc/ca-certificates/cert.pem"` to `~/.irods/irods_environment.json`, then `iinit`.
 
-**Automated backup:** use [rdms-backup](https://github.com/mf-rug/rdms-backup), a small tool around rclone and launchd that mirrors `~/Documents` to RDMS. It is upload-only (files you delete locally stay on the server), keeps earlier versions of overwritten files for 90 days, verifies after every run that each file is on the server with the right size, runs at fixed hours and catches up after sleep or downtime, keeps your password in the macOS keychain, and tells you when something is wrong. Setup takes ten minutes:
+**Automated backup:** use [rdms-backup](https://github.com/mf-rug/rdms-backup), a small tool around rclone and launchd that mirrors a folder of your choice to RDMS — typically `~/Documents`, or wherever your work lives; a second folder is a second config. It is upload-only (files you delete locally stay on the server), keeps earlier versions of overwritten files for 90 days, verifies after every run that each file is on the server with the right size, runs at fixed hours and catches up after sleep or downtime, keeps your password in the macOS keychain, and tells you when something is wrong. Setup takes ten minutes:
 
 ```bash
 brew install rclone jq bash
-git clone https://github.com/mf-rug/rdms-backup ~/Documents/Code/backup && cd ~/Documents/Code/backup
-cp backup.conf.example backup.conf   # fill in your @rug.nl address; adjust folders and hours if you like
+git clone https://github.com/mf-rug/rdms-backup ~/rdms-backup && cd ~/rdms-backup   # anywhere you like
+cp backup.conf.example backup.conf   # fill in your @rug.nl address and the folder to back up; adjust hours if you like
 ./backup.sh setup                    # stores the password in the keychain, tests the connection
 ./backup.sh run --dry-run --full     # what the first run would upload — nothing is written yet
 ./backup.sh run --full               # the first run; takes hours, depending on how many files you have
@@ -397,7 +397,7 @@ cp backup.conf.example backup.conf   # fill in your @rug.nl address; adjust fold
 
 Worth knowing before you start:
 
-- **File count is what costs time, not gigabytes.** The server accepts about one small file per second per connection (the tool uses 16 in parallel, roughly 5,000 files per hour). Virtualenvs, conda environments, `node_modules`, caches and benchmark working folders with tens of thousands of tiny files are excluded by default (`exclude.txt`); put an empty `.nobackup` file into any other folder you don't want backed up, or keep such things outside `~/Documents`.
+- **File count is what costs time, not gigabytes.** The server accepts about one small file per second per connection (the tool uses 16 in parallel, roughly 5,000 files per hour). Virtualenvs, conda environments, `node_modules`, caches and benchmark working folders with tens of thousands of tiny files are excluded by default (`exclude.txt`); put an empty `.nobackup` file into any other folder you don't want backed up, or keep such things outside the folder you back up.
 - **Keep an eye on the quota.** RDMS doesn't report it over WebDAV, so check the [web portal](https://research.web.rug.nl/rdmswebapp/) now and then. `./backup.sh orphans` lists what is on the server but no longer on your disk, if you need to free space.
 - **Time Machine cannot back up to RDMS.** WebDAV isn't a supported destination, and a Time Machine sparse bundle (thousands of 8 MB band files, rewritten constantly) would crawl on this server. If you want whole-machine restores including apps and settings, use Time Machine with an external SSD; rdms-backup covers your data off-site.
 - **Restoring** is one command: `./backup.sh rclone copy rugdav:Mac_Backup/Documents/Papers/x.pdf ~/Desktop/`; `./backup.sh versions x.pdf` shows earlier versions of a file. The README has the details.
