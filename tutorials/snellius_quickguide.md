@@ -16,7 +16,7 @@ Official docs: <https://edu.nl/cq7yn>
 4. **Connect** via SSH:
 
 ```bash
-ssh yourusername@snellius.surf.nl
+ssh <username>@snellius.surf.nl
 ```
 
 5. **Set up a shortcut** so you can just type `ssh ss` instead of the full address. Add this to `~/.ssh/config` (create the file if it doesn't exist):
@@ -37,9 +37,9 @@ ssh ss
 
 | Path | Purpose | Quota (urname) | Notes |
 |---|---|---|---|
-| `/gpfs/home5/urname` (`$HOME`) | Home directory | 200 GiB | Backed up, small quota |
-| `/gpfs/scratch1/` | Scratch / temp storage | 8 TiB | **Not backed up**, auto-purged |
-| `/projects/prjs1925` | Shared project space | Shared by group | Persistent, for project data |
+| `/home/<username>` (`$HOME`) | Home directory | 200 GiB | Backed up, small quota |
+| `/scratch-local/<username>` | Scratch / temp storage | 8 TiB | **Not backed up**, auto-purged |
+| `/projects/prjs1925` | Shared project space | Shared by group | **Not backed up**, persistent, for project data |
 
 Check your quota anytime with:
 ```bash
