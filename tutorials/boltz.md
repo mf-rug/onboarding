@@ -61,16 +61,16 @@ For this reason, is generally best to use virtual environments unless your progr
 
 In your scratch folder, do:
 ```bash
-Python3 -m venv [name environment]
+python3 -m venv [name environment]
 ```
 For example:
 ```bash
-Python3 -m venv boltz-env
+python3 -m venv boltz-env
 ```
 
 To activate the environment, use:
 ```bash
-Source [name environment]/bin/activate
+source [name environment]/bin/activate
 ```
 
 You should now see the name of your virtual environment in brackets next to the command terminal prompt. To deactivate it, use
@@ -155,10 +155,11 @@ Example of submission script:
 #SBATCH --error=logs/%x_%j.err
 
 module load Python/3.11.5-GCCcore-13.2.0
-source /scratch/p324178/boltz-env/bin/activate
+module load PyTorch
+source /scratch/pxxxxxx/boltz-env/bin/activate
 
 boltz predict [filename].yaml \
---cache /scratch/p324178/boltz/.boltz/ \
+--cache /scratch/pxxxxxx/boltz/.boltz/ \
 --out_dir results/ \
 --use_msa_server \
 --accelerator gpu \
