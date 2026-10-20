@@ -509,7 +509,7 @@ Every RUG employee gets personal storage on RDMS (Research Data Management Syste
 
 **Browsing and one-off transfers:** [Cyberduck](https://cyberduck.io/) (GUI) or [rclone](https://rclone.org) with a WebDAV remote pointing at `https://webdav.data.rug.nl/you@rug.nl`. The wiki's iCommands also work on macOS once you point them at a current certificate bundle: `brew install ca-certificates`, add `"irods_ssl_ca_certificate_file": "/opt/homebrew/etc/ca-certificates/cert.pem"` to `~/.irods/irods_environment.json`, then `iinit`.
 
-**Automated backup:** use [rdms-backup](https://github.com/mf-rug/rdms-backup), a small tool around rclone and launchd that mirrors a folder of your choice to RDMS — typically `~/Documents`, or wherever your work lives; a second folder is a second config. It is upload-only (files you delete locally stay on the server), keeps earlier versions of overwritten files for 90 days, verifies after every run that each file is on the server with the right size, runs at fixed hours and catches up after sleep or downtime, keeps your password in the macOS keychain, and tells you when something is wrong. Setup takes ten minutes:
+**Automated backup:** use [rdms-backup](https://github.com/mf-rug/rdms-backup), a small tool around rclone and the system scheduler (launchd on macOS, Task Scheduler on Windows) that mirrors a folder of your choice to RDMS — typically `~/Documents`, or wherever your work lives; a second folder is a second config. It is upload-only (files you delete locally stay on the server), keeps earlier versions of overwritten files for 90 days, verifies after every run that each file is on the server with the right size, runs at fixed hours and catches up after sleep or downtime, keeps your password in the macOS keychain (on Windows in a DPAPI-encrypted file), and tells you when something is wrong. Setup takes ten minutes:
 
 ```bash
 brew install rclone jq bash
@@ -521,7 +521,16 @@ cp backup.conf.example backup.conf   # fill in your @rug.nl address and the fold
 ./backup.sh install                  # from now on it runs by itself; ./backup.sh status shows its health
 ```
 
+**On Windows** the same tool runs under Git Bash: install [Git for Windows](https://gitforwindows.org), then
+`winget install Rclone.Rclone jqlang.jq Python.Python.3.12`, open *Git Bash* and run the same commands as
+`bash backup.sh …`. Two Windows specifics: on managed RUG machines Git Bash's `HOME` is the network drive `X:`, so
+use `$USERPROFILE/Documents` (the Windows default) as the folder and `cd` to the repo by its full path; and if your
+Documents are redirected into OneDrive, back up a genuinely local folder instead. The scheduled task runs only while
+you are logged in. Details in the README's [Windows section](https://github.com/mf-rug/rdms-backup#windows).
+
 Worth knowing before you start:
+
+- **Folders that a cloud client already syncs** (iCloud Drive's "Desktop & Documents", OneDrive, Dropbox) gain little from a second copy, and their online-only placeholder files would be downloaded by every run. `./backup.sh probe` warns and counts them; prefer a folder that exists only on your computer.
 
 - **File count is what costs time, not gigabytes.** The server accepts about one small file per second per connection (the tool uses 16 in parallel, roughly 5,000 files per hour). Virtualenvs, conda environments, `node_modules`, caches and benchmark working folders with tens of thousands of tiny files are excluded by default (`exclude.txt`); put an empty `.nobackup` file into any other folder you don't want backed up, or keep such things outside the folder you back up.
 - **Keep an eye on the quota.** RDMS doesn't report it over WebDAV, so check the [web portal](https://research.web.rug.nl/rdmswebapp/) now and then. `./backup.sh orphans` lists what is on the server but no longer on your disk, if you need to free space.
