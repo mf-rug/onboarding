@@ -509,12 +509,22 @@ Every RUG employee gets personal storage on RDMS (Research Data Management Syste
 
 **Browsing and one-off transfers:** [Cyberduck](https://cyberduck.io/) (GUI) or [rclone](https://rclone.org) with a WebDAV remote pointing at `https://webdav.data.rug.nl/you@rug.nl`. The wiki's iCommands also work on macOS once you point them at a current certificate bundle: `brew install ca-certificates`, add `"irods_ssl_ca_certificate_file": "/opt/homebrew/etc/ca-certificates/cert.pem"` to `~/.irods/irods_environment.json`, then `iinit`.
 
-**Automated backup:** use [rdms-backup](https://github.com/mf-rug/rdms-backup), a small tool around rclone and the system scheduler (launchd on macOS, Task Scheduler on Windows) that mirrors a folder of your choice to RDMS — typically `~/Documents`, or wherever your work lives; a second folder is a second config. It is upload-only (files you delete locally stay on the server), keeps earlier versions of overwritten files for 90 days, verifies after every run that each file is on the server with the right size, runs at fixed hours and catches up after sleep or downtime, keeps your password in the macOS keychain (on Windows in a DPAPI-encrypted file), and tells you when something is wrong. Setup takes ten minutes:
+**Automated backup:** use [rdms-backup](https://github.com/mf-rug/rdms-backup), a small tool around rclone and the system scheduler (launchd on macOS, Task Scheduler on Windows) that mirrors a folder of your choice to RDMS — typically `~/Documents`, or wherever your work lives; a second folder is a second config. It is upload-only (files you delete locally stay on the server), keeps earlier versions of overwritten files for 90 days, verifies after every run that each file is on the server with the right size, runs at fixed hours and catches up after sleep or downtime, keeps your password in the macOS keychain (on Windows in a DPAPI-encrypted file), and tells you when something is wrong. Setup takes ten minutes. Install the requirements and get the tool:
 
 ```bash
 brew install rclone jq bash
-git clone https://github.com/mf-rug/rdms-backup ~/rdms-backup && cd ~/rdms-backup   # anywhere you like
-cp backup.conf.example backup.conf   # fill in your @rug.nl address and the folder to back up; adjust hours if you like
+git clone https://github.com/mf-rug/rdms-backup ~/rdms-backup   # anywhere you like
+```
+
+Then pick one of three ways:
+
+- **Double-click** `Setup.command` in that folder (Windows: `Setup.cmd`). A few dialogs ask for your RUG address, the folder and your password, then it tests the connection, installs the schedule and starts the first backup in the background.
+- **Let Claude do it.** In Claude Code, open the folder and say "set up my backup"; in the Claude desktop app, paste *"Clone https://github.com/mf-rug/rdms-backup, read its CLAUDE.md and set up my backup"*. You type the password into a dialog the tool opens, so it never passes through Claude.
+- **By hand**, in a terminal:
+
+```bash
+cd ~/rdms-backup
+./backup.sh init --user you@rug.nl --folder ~/Documents   # writes backup.conf (edit it for other hours etc.)
 ./backup.sh setup                    # stores the password in the keychain, tests the connection
 ./backup.sh run --dry-run --full     # what the first run would upload — nothing is written yet
 ./backup.sh run --full               # the first run; takes hours, depending on how many files you have
